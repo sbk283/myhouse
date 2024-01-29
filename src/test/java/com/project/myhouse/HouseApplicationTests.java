@@ -1,4 +1,4 @@
-package com.project.house;
+package com.project.myhouse;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

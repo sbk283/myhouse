@@ -1,4 +1,4 @@
-package com.project.house.global.util;
+package com.project.myhouse.global.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package com.project.house;
+package com.project.myhouse;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

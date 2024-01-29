@@ -1,4 +1,4 @@
-package com.project.house.global.jpa;
+package com.project.myhouse.global.jpa;
 
 import jakarta.persistence.*;
 import lombok.*;

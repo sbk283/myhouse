@@ -1,4 +1,4 @@
-package com.project.house.global.jpa;
+package com.project.myhouse.global.jpa;
 
 import com.project.myhouse.domain.user.entity.SiteUser;
 import com.project.myhouse.domain.user.service.UserService;

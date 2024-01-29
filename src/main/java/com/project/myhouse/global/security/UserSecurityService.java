@@ -1,4 +1,4 @@
-package com.project.house.global.security;
+package com.project.myhouse.global.security;
 
 import com.project.myhouse.domain.user.Role.UserRole;
 import com.project.myhouse.domain.user.entity.SiteUser;

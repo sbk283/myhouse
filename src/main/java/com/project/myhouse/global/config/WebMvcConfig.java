@@ -1,4 +1,4 @@
-package com.project.house.global.config;
+package com.project.myhouse.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
