@@ -1,0 +1,66 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+    <div class="row my-3">
+        <div class="col-6 admin-page">관리자페이지</div>
+        <div class="col-6">
+            <form>
+                <div class="input-group admin-user">
+                    <input type="text" name="kw" id="search_kw" class="form-control" th:value="${param.kw}">
+                    <button class="btn btn-outline-secondary" id="btn_search">찾기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+        <tr class="text-center">
+            <th>번호</th>
+            <th>아이디</th>
+            <th>닉네임</th>
+            <th>가입일자</th>
+            <th>탈퇴</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="siteUser, loop : ${paging}">
+            <td class="text-center" th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+            <td class="text-center" th:text="${siteUser.userId}"></td>
+            <td class="text-center" th:text="${siteUser.nickname}"></td>
+            <td class="text-center" th:text="${#temporals.format(siteUser.createDate, 'yyyy-MM-dd')}"></td>
+            <td>
+                <span th:if="${siteUser.checkedWithdrawal}">탈퇴한 사용자</span>
+                <form th:unless="${siteUser.checkedWithdrawal}" th:action="@{/admin/user/delete/{userId}(userId=${siteUser.userId})}" method="post"
+                      onsubmit="return confirm('정말 탈퇴시키겠습니까?');">
+                    <input type="hidden" name="userId" th:value="${siteUser.userId}" />
+                    <button type="submit" class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()">탈퇴</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 페이징처리 시작 -->
+    <nav th:if="${!paging.isEmpty()}" th:with="kwBase = '?kw=' + ${param.kw != null ? param.kw : ''}" >
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{|${kwBase}&page=${paging.number - 1}|}">이전</a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                th:classappend="${page == paging.number} ? 'active'"
+                class="page-item">
+                <a  th:text="${page + 1}" class="page-link" th:href="@{|${kwBase}&page=${page}|}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|${kwBase}&page=${paging.number + 1}|}">다음</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- 페이징처리 끝 -->
+    <form th:action="@{/admin/user/list}" method="get" id="searchForm">
+        <input type="hidden" id="kw" name="kw" th:value="${kw}">
+        <input type="hidden" id="page" name="page" th:value="${paging.number}">
+    </form>
+</div>
+</html>

@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: dev
+    include: secret
+  security:
+    cors:
+      enabled: true
+      path-pattern: /user/**
+      allowed-origins: "*"
+      allowed-methods: GET,POST,PUT,DELETE
+      allowed-headers: "*"
+      allow-credentials: true
+    oauth2:
+      client:
+        registration:
+          kakao:
+            scope: profile_nickname
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+custom:
+  fileDirPath: /imageFile
