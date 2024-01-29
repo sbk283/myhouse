@@ -9,7 +9,7 @@ public class UserCreateForm {
 
     @NotEmpty(message = "사용자ID는 필수 입력 항목입니다.")
     @Size(min = 5, max = 15, message = "사용자ID는 5자 이상 15자 이하로 입력해주세요.")
-    private String username;
+    private String userId;
 
     @NotEmpty(message = "닉네임은 필수 입력 항목입니다.")
     @Size(min = 2, max = 15, message = "사용자명은 2자 이상 15자 이하로 입력해주세요.")

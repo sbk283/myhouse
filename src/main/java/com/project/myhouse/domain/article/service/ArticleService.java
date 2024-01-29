@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,7 @@ public class ArticleService {
                 .title(title)
                 .content(content)
                 .user(user)
+                .createDate(LocalDateTime.now())
                 .thumbnailImg(thumbnailRelPath)
                 .build();
         this.articleRepository.save(article);

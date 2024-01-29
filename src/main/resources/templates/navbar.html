@@ -1,12 +1,15 @@
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/" style="text-align: center;">My<br>House</a>
+        <a class="navbar-brand" href="/" style="text-align: center;">
+            <div>MyHouse</div>
+            <div style="font-size: 15px;">우리집에 어서오세요</div>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav menu-bar-1">
+            <ul class="navbar-nav menu-bar-1 flex" style="justify-content: start;">
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
@@ -15,12 +18,12 @@
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
                 </li>
             </ul>
-            <ul class="navbar-nav menu-bar-2 flex justify-content-end">
+            <ul class="navbar-nav menu-bar-2 flex" style="justify-content: end; margin-left: auto;">
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/notice/list}">공지사항</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/community/list}">자유게시판</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/article/list}">자유게시판</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/schedule/list}">숙소예약</a>

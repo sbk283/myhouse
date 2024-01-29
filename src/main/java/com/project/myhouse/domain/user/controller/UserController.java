@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.thymeleaf.util.StringUtils;
 
 import java.security.Principal;
 
@@ -39,7 +40,7 @@ public class UserController {
         validatePassword(userCreateForm.getPassword1(), userCreateForm.getPassword2(), bindingResult);
 
         try {
-            userService.create(userCreateForm.getUsername(), userCreateForm.getNickname(), userCreateForm.getPassword1(), userCreateForm.getPhone());
+            userService.create(userCreateForm.getUserId(), userCreateForm.getNickname(), userCreateForm.getPassword1(), userCreateForm.getPhone());
         } catch (DataIntegrityViolationException e) {
             handleUserCreationError(bindingResult);
         } catch (Exception e) {
@@ -68,29 +69,52 @@ public class UserController {
         return "user/login_form";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
-    public String mypage(UserMypageForm userMypageForm, Principal principal, Model model) {
+    public String mypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
         String username = principal.getName();
         SiteUser siteUser = this.userService.getUser(username);
         if (!siteUser.getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        model.addAttribute("username", siteUser.getUserId());
-        model.addAttribute("nickname", siteUser.getNickname());
-        model.addAttribute("phone", siteUser.getPhone());
+        userCreateForm.setUserId(siteUser.getUserId());
+        userMypageForm.setNickname(siteUser.getNickname());
+        userMypageForm.setPhone(siteUser.getPhone());
         return "user/mypage_form";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/mypage")
+    public String userModify(@Valid UserMypageForm userMypageForm,
+                             BindingResult bindingResult, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "user/mypage_form";
+        }
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        if (!siteUser.getUserId().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        try {
+            userService.modify(siteUser, userMypageForm.getNickname(), userMypageForm.getPhone());
+            return "redirect:/user/showmypage";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "user/mypage_form";
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/showmypage")
-    public String showmypage(UserMypageForm userMypageForm, Principal principal, Model model) {
+    public String showmypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
         String username = principal.getName();
         SiteUser siteUser = this.userService.getUser(username);
         if (!siteUser.getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        model.addAttribute("username", siteUser.getUserId());
-        model.addAttribute("nickname", siteUser.getNickname());
-        model.addAttribute("phone", siteUser.getPhone());
+        userCreateForm.setUserId(siteUser.getUserId());
+        userMypageForm.setNickname(siteUser.getNickname());
+        userMypageForm.setPhone(siteUser.getPhone());
+
         return "user/mypage_detail";
     }
 }

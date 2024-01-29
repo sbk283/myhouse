@@ -37,7 +37,7 @@ public class ArticleReplyController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("article", article);
-            return "article_detail";
+            return "article/article_detail";
         }
 
         ArticleReply articleReply = this.articleReplyService.create(article, articleReplyForm.getContent(), siteUser);
@@ -58,7 +58,7 @@ public class ArticleReplyController {
         model.addAttribute("articleReplyForm", articleReplyForm); // 수정 폼에 초기값으로 내용을 설정
         model.addAttribute("articleReplyId", id); // 수정 대상의 ID를 모델에 추가
 
-        return "article_reply_form";
+        return "articleReply/article_reply_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -66,7 +66,7 @@ public class ArticleReplyController {
     public String articleReplyModify(@Valid ArticleReplyForm articleReplyForm, BindingResult bindingResult,
                                        @PathVariable("id") Long id, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
-            return "articleReply_form";
+            return "articleReply/article_reply_form";
         }
 
         ArticleReply articleReply = this.articleReplyService.getArticleReply(id);

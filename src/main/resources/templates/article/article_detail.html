@@ -1,10 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- /resources/templates/article/detail.html -->
+<html layout:decorate="~{layout}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${article.title}"></title>
 </head>
 <body>
+<div layout:fragment="content" class="container my-3">
+    <!-- 질문 -->
+    <h2 class="border-bottom py-2" th:text="${article.title}"></h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" th:utext="${@commonUtil.markdown(article.content)}"></div>
+            <div>
+                <img th:src="@{|/file/${article.thumbnailImg}|}" alt="12313s">
+            </div>
+            <div class="d-flex justify-content-end">
+                <div th:if="${article.modifiedDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">수정됨</div>
+                    <div th:text="${#temporals.format(article.modifiedDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                </div>
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2">
+                        <div class="mb-2" th:if="${article.user != null}" th:text="${article.user.nickname}"></div>
+                        <div th:text="${#temporals.format(article.createDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3">
+                <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:authorize="isAuthenticated()"
+                   th:if="${article.user != null and #authentication.getPrincipal().getUsername() == article.user.userId}"
+                   th:text="수정"></a>
+                <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/article/delete/${article.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${article.user != null and #authentication.getPrincipal().getUsername() == article.user.userId}"
+                   th:text="삭제"></a>
+                <!-- 관리자 전용 삭제 버튼 -->
+                <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/article/delete/${article.id}|}"
+                   class="delete btn btn-sm btn-danger" th:if="${loginUser.isCheckedAdmin()}"
+                   th:text="'관리자 삭제'"></a>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/article/list}" class="btn btn-primary">목록보기</a>
+    <!-- 답변의 갯수 표시 -->
+    <h5 class="border-bottom my-3 py-2"
+        th:text="|${#lists.size(article.replyList)}개의 답변이 있습니다.|"></h5>
 
+    <!-- 답변 반복 시작 -->
+    <div class="card my-3" th:each="articleReply : ${article.replyList}">
+        <a th:id="|articleReply_${articleReply.id}|"></a>
+        <div class="card-body">
+            <div class="card-text" th:utext="${@commonUtil.markdown(articleReply.content)}"></div>
+            <div class="d-flex justify-content-end">
+                <div th:if="${articleReply.modifiedDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                    <div class="mb-2">
+                        <div class="mb-2" th:text="${'수정됨'}"></div>
+                        <div th:text="${#temporals.format(articleReply.modifiedDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                    </div>
+                </div>
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div class="mb-2" th:if="${articleReply.user != null}" th:text="${articleReply.user.nickname}"></div>
+                    <div th:text="${#temporals.format(articleReply.createDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                </div>
+            </div>
+            <div class="my-3">
+                <a th:href="@{|/articleReply/modify/${articleReply.id}|}" class="btn btn-sm btn-outline-secondary"
+                   sec:userize="isAuthenticated()"
+                   th:if="${articleReply.user != null and #authentication.getPrincipal().getUsername() == articleReply.user.userId}"
+                   th:text="수정"></a>
+                <a onclick="return confirm('정말 삭제 하시겠습니까?');" th:href="@{|/articleReply/delete/${articleReply.id}|}"
+                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                   th:if="${articleReply.user != null and #authentication.getPrincipal().getUsername() == articleReply.user.userId}"
+                   th:text="삭제"></a>
+                <!-- 관리자 전용 삭제 버튼 -->
+                <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/articleReply/delete/${articleReply.id}|}"
+                   class="delete btn btn-sm btn-danger" th:if="${loginUser.isCheckedAdmin()}"
+                   th:text="'관리자 삭제'"></a>
+            </div>
+        </div>
+    </div>
+    <!-- 답변 반복 끝  -->
+    <!-- 답변 작성 -->
+    <form th:action="@{|/articleReply/create/${article.id}|}" th:object="${articleReplyForm}" method="post"
+          class="my-3">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <textarea
+                required
+                maxlength="2000"
+                placeholder="내용을 2,000자 이하로 입력하세요"
+                sec:authorize="isAuthenticated()"
+                th:field="*{content}"
+                class="form-control"
+                rows="10"
+        ></textarea>
+        <input type="submit" value="답변등록" class="btn btn-primary my-2">
+    </form>
+</div>
 </body>
 </html>
+

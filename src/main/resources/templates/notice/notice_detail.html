@@ -20,11 +20,11 @@
             <div class="my-3">
                 <a th:href="@{|/notice/modify/${notice.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
-                   th:if="${notice.user != null and #authentication.getPrincipal().getUserId() == notice.siteUser.UserId}"
+                   th:if="${notice.user != null and #authentication.getPrincipal().getUsername() == notice.user.UserId}"
                    th:text="수정"></a>
                 <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/notice/delete/${notice.id}|}"
                    class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                   th:if="${notice.user != null and #authentication.getPrincipal().getUserId() == notice.user.UserId}"
+                   th:if="${notice.user != null and #authentication.getPrincipal().getUsername() == notice.user.UserId}"
                    th:text="삭제"></a>
             </div>
         </div>

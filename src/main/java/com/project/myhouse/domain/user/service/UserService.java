@@ -63,17 +63,17 @@ public class UserService {
         return userRepository.findAll();
     }
     @Transactional
-    public void modify(SiteUser siteUser, String nickname, String phone) {
-        this.userRepository.findByUserId(siteUser.getUserId())
+    public void modify(SiteUser user, String nickname, String phone) {
+        this.userRepository.findByUserId(user.getUserId())
                 .ifPresent(updateUser -> {
                     SiteUser modifyUser = SiteUser.builder()
                             .id(updateUser.getId())
-                            .userId(siteUser.getUserId())
+                            .userId(user.getUserId())
                             .nickname(nickname)
                             .phone(phone)
-                            .createDate(siteUser.getCreateDate())
-                            .checkedAdmin(siteUser.isCheckedAdmin())
-                            .checkedWithdrawal(siteUser.isCheckedWithdrawal())
+                            .createDate(user.getCreateDate())
+                            .checkedAdmin(user.isCheckedAdmin())
+                            .checkedWithdrawal(user.isCheckedWithdrawal())
                             .build();
                     this.userRepository.save(modifyUser);
                 });

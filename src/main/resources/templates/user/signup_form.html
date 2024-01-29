@@ -2,14 +2,14 @@
 <div layout:fragment="content" class="container my-3">
   <div class="my-3 border-bottom">
     <div>
-      <h4>회원가입</h4>
+      <h2>회원가입</h2>
     </div>
   </div>
   <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
     <div class="mb-3">
-      <label for="username" class="form-label">사용자ID</label>
-      <input type="text" th:field="*{username}" class="form-control">
+      <label for="userId" class="form-label">사용자ID</label>
+      <input type="text" th:field="*{userId}" class="form-control">
     </div>
     <div class="mb-3">
       <label for="nickname" class="form-label">닉네임</label>

@@ -33,7 +33,7 @@ public class ArticleController {
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Article> paging = this.articleService.getList(page, kw);
         model.addAttribute("paging", paging);
-        return "article_list";
+        return "article/article_list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -41,20 +41,20 @@ public class ArticleController {
     public String detail(Model model, @PathVariable("id") Long id, ArticleReplyForm articleReplyForm) {
         Article article = this.articleService.getArticle(id);
         model.addAttribute("article", article);
-        return "article_detail";
+        return "article/article_detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String articleCreate(ArticleForm articleForm) {
-        return "article_form";
+        return "article/article_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String articleCreate(@Valid ArticleForm articleForm, BindingResult bindingResult, Principal principal, @RequestParam("thumbnail") MultipartFile thumbnail) {
         if (bindingResult.hasErrors()) {
-            return "article_form";
+            return "article/article_form";
         }
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.articleService.create(articleForm.getTitle(), articleForm.getContent(), siteUser, thumbnail);
@@ -70,7 +70,7 @@ public class ArticleController {
         }
         articleForm.setTitle(article.getTitle());
         articleForm.setContent(article.getContent());
-        return "article_form";
+        return "article/article_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -78,7 +78,7 @@ public class ArticleController {
     public String articleModify(@Valid ArticleForm articleForm, BindingResult bindingResult,
                                   Principal principal, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors()) {
-            return "article_form";
+            return "article/article_form";
         }
         Article article = this.articleService.getArticle(id);
         if (!article.getUser().getUserId().equals(principal.getName())) {
