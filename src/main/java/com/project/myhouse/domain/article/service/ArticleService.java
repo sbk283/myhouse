@@ -71,6 +71,7 @@ public class ArticleService {
         Article modifiyArticle = article.toBuilder()
                 .title(title)
                 .content(content)
+                .modifiedDate(LocalDateTime.now())
                 .build();
 
         this.articleRepository.save(modifiyArticle);

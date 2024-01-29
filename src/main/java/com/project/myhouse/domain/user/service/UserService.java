@@ -36,8 +36,6 @@ public class UserService {
                 .password(passwordEncoder.encode(password))
                 .phone(phone)
                 .createDate(LocalDateTime.now())
-                .checkedAdmin(false)
-                .checkedWithdrawal(false)
                 .build();
         this.userRepository.save(user);
         return user;
@@ -50,8 +48,11 @@ public class UserService {
 
     @Transactional
     public SiteUser whenSocialLogin(String providerTypeCode, String username, String nickname) {
-        return userRepository.findByUserId(username)
-                .orElseGet(() -> create(username, nickname, "", ""));
+        Optional<SiteUser> opUser = userRepository.findByUserId(username);
+
+        if (opUser.isPresent()) return opUser.get();
+
+        return create(username, nickname,null, "");
     }
 
     // findByUserId 메소드는 이미 userRepository에서 제공되므로, 중복 코드 제거
@@ -70,8 +71,10 @@ public class UserService {
                             .id(updateUser.getId())
                             .userId(user.getUserId())
                             .nickname(nickname)
+                            .password(user.getPassword())
                             .phone(phone)
                             .createDate(user.getCreateDate())
+                            .modifiedDate(LocalDateTime.now())
                             .checkedAdmin(user.isCheckedAdmin())
                             .checkedWithdrawal(user.isCheckedWithdrawal())
                             .build();
