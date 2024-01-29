@@ -32,7 +32,7 @@
                 </a>
             </td>
             <td><span th:if="${notice.user != null}" th:text="${notice.user.nickname}"></span></td>
-            <td th:text="${#temporals.format(notice.createDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
+            <td th:text="${#temporals.format(notice.createDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></td>
         </tr>
         </tbody>
     </table>
