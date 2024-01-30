@@ -1,0 +1,44 @@
+<html layout:decorate="~{layout}">
+<body>
+<div layout:fragment="content" class="container mx-auto">
+    <div class="btn-container" style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 30px; margin: 0;">예약현황</h2>
+        <a th:href="@{/calendar/list}" class="btn btn-primary">돌아가기</a>
+    </div>
+
+    <table class="table overflow-x-auto">
+        <thead class="table-zebra">
+        <tr class="text-center">
+            <th>작성자</th>
+            <th>예약자 성함</th>
+            <th>세부사항</th>
+            <th>시작일자</th>
+            <th>종료일자</th>
+            <th>수정/삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="calendar, loop : ${myCalendar}">
+            <td class="text-center" th:text="${calendar.user.getNickname()}"></td>
+            <td class="text-center" th:text="${calendar.getTitle()}"></td>
+            <td class="text-center" th:text="${calendar.getContent()}"></td>
+            <td class="text-center" th:text="${calendar.getStartDate()}"></td>
+            <td class="text-center" th:text="${calendar.getEndDate()}"></td>
+            <td class="my-3 text-center">
+                <a th:href="@{|/calendar/modify/${calendar.Id}|}"
+                   th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
+                   class="btn" th:text="수정"></a>
+                <a onclick="return confirm('정말로 삭제 하시겠습니까?');"
+                   th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
+                   th:href="@{|/calendar/delete/${calendar.id}|}"
+                   class="btn" sec:authorize="isAuthenticated()" th:text="삭제"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+<!-- 여기에 필요한 스크립트 링크 및 스크립트 추가 -->
+
+</html>

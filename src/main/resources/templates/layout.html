@@ -24,8 +24,21 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css">
+
+    <!-- fullcalendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/locales-all.js"></script>
+
+    <!--  daisy Ui  -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.6.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"></script>
+    <html data-theme="cupcake"></html>
+
+    <!--  tailwind css  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" />
     <title>MyHouse - 우리집에 어서오세요</title>
 </head>
 <body>
@@ -36,14 +49,12 @@
 <th:block layout:fragment="content">
     <!-- 이 부분은 content를 재정의하면서 style.css를 상속받지 않도록 제거 -->
     <link rel="stylesheet" type="text/css" th:remove="tag" th:href="@{/style.css}">
-    <!-- test.html에서 작성한 내용을 여기에 넣어줌 -->
-    <div th:replace="test :: content"></div>
 </th:block>
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
 <!-- 자바스크립트 Start -->
 <th:block layout:fragment="script"></th:block>
 <!-- 자바스크립트 End -->
 <!--푸터(맨아래있는애)-->
-<!--<footer th:replace="~{footer :: footerFragment}" class="mt-auto"></footer>-->
+<footer th:replace="~{footer :: footerFragment}" class="mt-auto"></footer>
 </body>
 </html>

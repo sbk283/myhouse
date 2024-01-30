@@ -13,8 +13,8 @@
             </form>
         </div>
     </div>
-    <table class="table">
-        <thead class="table-dark">
+    <table class="table overflow-x-auto">
+        <thead class="table-zebra">
         <tr class="text-center">
             <th>번호</th>
             <th style="width:50%">제목</th>
@@ -25,7 +25,7 @@
         <tbody>
         <tr class="text-center" th:each="article, loop : ${paging}">
             <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-            <td class="text-start">
+            <td class="text-center">
                 <a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}" style="text-decoration: none;"></a>
             </td>
             <td><span th:if="${article.user != null}" th:text="${article.user.nickname}"></span></td>

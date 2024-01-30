@@ -14,8 +14,8 @@
             </form>
         </div>
     </div>
-    <table class="table">
-        <thead class="table-dark">
+    <table class="table overflow-x-auto">
+        <thead class="table-zebra">
         <tr class="text-center">
             <th>번호</th>
             <th style="width:50%">제목</th>
@@ -26,10 +26,8 @@
         <tbody>
         <tr class="text-center" th:each="notice, loop : ${paging}">
             <td th:text="${paging.getTotalElements() - (paging.number * paging.size) - loop.index}"></td>
-            <td class="text-start">
-                <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}" style="text-decoration: none;">
-                    <span th:if="${notice.isSecret}" class="badge bg-secondary">비밀글</span>
-                </a>
+            <td class="text-center">
+                <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}" style="text-decoration: none;"></a>
             </td>
             <td><span th:if="${notice.user != null}" th:text="${notice.user.nickname}"></span></td>
             <td th:text="${#temporals.format(notice.createDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}"></td>
