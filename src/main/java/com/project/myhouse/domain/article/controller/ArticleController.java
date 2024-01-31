@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 
@@ -30,7 +32,7 @@ public class ArticleController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
+                             @RequestParam(value = "kw", defaultValue = "") String kw) {
         Page<Article> paging = this.articleService.getList(page, kw);
         model.addAttribute("paging", paging);
         return "article/article_list";

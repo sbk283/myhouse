@@ -29,7 +29,7 @@ public class NoticeController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String list(Model model, Principal principal,@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw, HttpServletRequest request) {
+                       @RequestParam(value = "kw", defaultValue = "") String kw, HttpServletRequest request, SiteUser user) {
         Page<Notice> paging = this.noticeService.getList(page, kw);
 //        Member loginUser = this.memberService.getMember(principal.getName());
         model.addAttribute("paging", paging);
