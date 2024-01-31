@@ -69,11 +69,13 @@ public class ArticleService {
 
     public void modify(Article article, String title, String content) {
         Article modifiyArticle = article.toBuilder()
+                .id(article.getId())
+                .createDate(article.getCreateDate())
+                .modifiedDate(LocalDateTime.now())
                 .title(title)
                 .content(content)
-                .modifiedDate(LocalDateTime.now())
+                .user(article.getUser())
                 .build();
-
         this.articleRepository.save(modifiyArticle);
     }
 

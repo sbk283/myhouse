@@ -1,5 +1,6 @@
 package com.project.myhouse.domain.notice.service;
 
+import com.project.myhouse.domain.article.entity.Article;
 import com.project.myhouse.domain.notice.entity.Notice;
 import com.project.myhouse.domain.notice.form.NoticeCreateForm;
 import com.project.myhouse.domain.notice.repository.NoticeRepository;
@@ -7,22 +8,30 @@ import com.project.myhouse.domain.user.entity.SiteUser;
 import jakarta.persistence.criteria.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+
+    @Value("${custom.fileDirPath}")
+    private String fileDirPath;
 
     public Page<Notice> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
@@ -41,12 +50,22 @@ public class NoticeService {
         }
     }
 
-    public void create(@Valid NoticeCreateForm noticeCreateForm, SiteUser user) {
+    public void create(String title, String content, SiteUser user, MultipartFile thumbnail) {
+        String thumbnailRelPath = "notice/" + UUID.randomUUID().toString() + ".jpg";
+        File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+
+        try {
+            thumbnail.transferTo(thumbnailFile);
+        } catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+
         Notice notice = Notice.builder()
+                .title(title)
+                .content(content)
                 .user(user)
-                .title(noticeCreateForm.getTitle())
-                .content(noticeCreateForm.getContent())
                 .createDate(LocalDateTime.now())
+                .thumbnailImg(thumbnailRelPath)
                 .build();
         this.noticeRepository.save(notice);
     }

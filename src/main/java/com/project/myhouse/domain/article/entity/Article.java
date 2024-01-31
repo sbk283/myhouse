@@ -22,8 +22,10 @@ import java.util.List;
 public class Article extends BaseEntity {
     @ManyToOne
     private SiteUser user; //작성자 정보
+
     @Column(length = 50)
     private String title; //게시글 제목
+
     @Column(columnDefinition = "TEXT")
     private String content;//게시글 내용
 

@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class ArticleReplyService {
@@ -21,6 +23,7 @@ public class ArticleReplyService {
                 .content(content)
                 .article(article)
                 .user(user)
+                .createDate(LocalDateTime.now())
                 .build();
         this.articleReplyRepository.save(createArticleReply);
         return createArticleReply;
@@ -34,6 +37,8 @@ public class ArticleReplyService {
     public void modify(ArticleReply articleReply, String content) {
         ArticleReply modifyArticleReply = articleReply.toBuilder()
                 .content(content)
+                .createDate(articleReply.getCreateDate())
+                .modifiedDate(LocalDateTime.now())
                 .build();
         this.articleReplyRepository.save(modifyArticleReply);
     }

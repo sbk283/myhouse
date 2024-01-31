@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -65,7 +66,7 @@ public class NoticeController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid NoticeCreateForm noticeForm, BindingResult bindingResult, Principal principal,
+    public String create(@Valid NoticeCreateForm noticeForm, BindingResult bindingResult, Principal principal, @RequestParam("thumbnail") MultipartFile thumbnail,
                          HttpServletRequest request, Model model) {
 
         SiteUser loginUser = userService.getUser(principal.getName());
@@ -73,10 +74,11 @@ public class NoticeController {
             if (bindingResult.hasErrors()) {
 
                 model.addAttribute("request", request);
+                model.addAttribute("noticeForm", noticeForm);
                 return "notice/notice_form";
             }
 
-            this.noticeService.create(noticeForm, loginUser);
+            this.noticeService.create(noticeForm.getTitle(), noticeForm.getContent(), loginUser, thumbnail);
             return "redirect:/notice/list";
         }
         return "redirect:/notice/list";

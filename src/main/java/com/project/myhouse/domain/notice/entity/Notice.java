@@ -21,10 +21,11 @@ public class Notice extends BaseEntity {
     @ManyToOne
     private SiteUser user;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 50)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
-    private LocalDateTime modifiedDate;
+    private String thumbnailImg;
 }

@@ -90,21 +90,20 @@
             headerToolbar: {
                 left: 'prev,today,next',
                 center: 'title',
-                right: 'dayGridMonth,timeGridDay,reserveBtn,manageBtn'
+                right: 'reserveBtn,manageBtn'
             },
             locale: initialLocaleCode,
-            buttonIcons: false, // show the prev/next text
+            buttonIcons: true, // show the prev/next text
             weekNumbers: true,
-            navLinks: true, // can click day/week names to navigate views
+            navLinks: false, // can click day/week names to navigate views
             editable: false,
             dayMaxEvents: true, // allow "more" link when too many events
             events: calendarOBJ,
-            eventClick: function (info) {
-                // 이벤트 클릭 시 모달 창에 자세한 정보 표시
-                var event = info.event;
-                var content = event.extendedProps.content || ''; // content 속성이 없을 경우 빈 문자열
-                eventDetails.innerHTML = '<h2>' + event.title + '</h2><p>' + content + '</p>';
-                eventModal.style.display = 'block';
+            eventClick: function(info) {
+                alert('예약명단: ' + info.event.title);
+
+                // change the border color just for fun
+                info.el.style.borderColor = 'red';
             }
         });
 

@@ -52,7 +52,7 @@ public class UserService {
 
         if (opUser.isPresent()) return opUser.get();
 
-        return create(username, nickname,null, "");
+        return create(username, nickname,"", "");
     }
 
     // findByUserId 메소드는 이미 userRepository에서 제공되므로, 중복 코드 제거

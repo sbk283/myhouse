@@ -1,7 +1,7 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container my-3">
     <div class="row my-3">
-        <h2 class="col-6 admin-page">관리자페이지</h2>
+        <h2 class="col-6 admin-page bold" style="font-size: 30px">관리자페이지</h2>
         <div class="col-6">
             <form>
                 <div class="input-group admin-user">
@@ -11,8 +11,8 @@
             </form>
         </div>
     </div>
-    <table class="table">
-        <thead class="table-dark">
+    <table class="table overflow-x-auto">
+        <thead class="table-zebra">
         <tr class="text-center">
             <th>번호</th>
             <th>아이디</th>
@@ -34,7 +34,7 @@
                 <form th:unless="${siteUser.checkedWithdrawal}" th:action="@{/admin/user/delete/{userId}(userId=${siteUser.userId})}" method="post"
                       onsubmit="return confirm('정말 탈퇴시키겠습니까?');">
                     <input type="hidden" name="userId" th:value="${siteUser.userId}"/>
-                    <button type="submit" class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()">탈퇴</button>
+                    <button type="submit" class="btn btn-secondary" sec:authorize="isAuthenticated()">탈퇴</button>
                 </form>
             </td>
         </tr>
