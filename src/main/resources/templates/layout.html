@@ -41,10 +41,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" referrerpolicy="no-referrer" />
     <title>MyHouse - 우리집에 어서오세요</title>
 </head>
-<body>
-
 <!-- 네비게이션바 -->
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
+<body style="margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;">
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 <th:block layout:fragment="content">
     <!-- 이 부분은 content를 재정의하면서 style.css를 상속받지 않도록 제거 -->
@@ -55,6 +54,6 @@
 <th:block layout:fragment="script"></th:block>
 <!-- 자바스크립트 End -->
 <!--푸터(맨아래있는애)-->
-<footer th:replace="~{footer :: footerFragment}" class="mt-auto"></footer>
 </body>
+<footer th:replace="~{footer :: footerFragment}" class="mt-auto"></footer>
 </html>

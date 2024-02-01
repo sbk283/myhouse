@@ -1,6 +1,7 @@
 package com.project.myhouse.domain.user.controller;
 
 import com.project.myhouse.domain.user.entity.SiteUser;
+import com.project.myhouse.domain.user.form.AdminCreateForm;
 import com.project.myhouse.domain.user.form.UserCreateForm;
 import com.project.myhouse.domain.user.form.UserMypageForm;
 import com.project.myhouse.domain.user.service.UserService;
@@ -11,11 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.thymeleaf.util.StringUtils;
 
 import java.security.Principal;
 
@@ -37,7 +36,7 @@ public class UserController {
             return "user/signup_form";
         }
 
-        validatePassword(userCreateForm.getPassword1(), userCreateForm.getPassword2(), bindingResult);
+//        validatePassword(userCreateForm.getPassword1(), userCreateForm.getPassword2(), bindingResult);
 
         try {
             userService.create(userCreateForm.getUserId(), userCreateForm.getNickname(), userCreateForm.getPassword1(), userCreateForm.getPhone());
@@ -116,5 +115,29 @@ public class UserController {
         userMypageForm.setPhone(siteUser.getPhone());
 
         return "user/mypage_detail";
+    }
+
+    @GetMapping("/admin/signup")
+    public String adminSignup(AdminCreateForm adminCreateForm) {
+        return "user/admin_signup_form";
+    }
+
+    @PostMapping("/admin/signup")
+    public String adminSignup(@Valid AdminCreateForm adminCreateForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "user/admin_signup_form";
+        }
+
+//        validatePassword(adminCreateForm.getPassword1(), adminCreateForm.getPassword2(), bindingResult);
+
+        try {
+            userService.adminCreate(adminCreateForm.getUserId(), adminCreateForm.getNickname(), adminCreateForm.getPassword1(), adminCreateForm.getPhone(), adminCreateForm.getAdminPassword());
+        } catch (DataIntegrityViolationException e) {
+            handleUserCreationError(bindingResult);
+        } catch (Exception e) {
+            handleUnexpectedError(bindingResult, e);
+        }
+
+        return "redirect:/";
     }
 }

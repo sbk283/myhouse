@@ -1,20 +1,20 @@
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="navbar bg-base-100">
         <div class="flex-1">
-            <a th:href="@{/}" class="btn btn-ghost text-xl">MyHouse</a>
+            <a th:href="@{/}" class="btn btn-ghost text-xl">MyHouse<i class="fa-solid fa-people-roof"></i></a>
         </div>
         <div class="flex-none">
-            <ul class="menu menu-horizontal space-x-4 collapse navbar-collapse">
-                <li><a class="menu-item" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
-                <li><a class="menu-item" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a></li>
-                <li><a class="menu-item" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
-                <li><a class="menu-item" sec:authorize="isAuthenticated()" th:href="@{/notice/list}">공지사항</a></li>
-                <li><a class="menu-item" sec:authorize="isAuthenticated()" th:href="@{/article/list}">자유게시판</a></li>
-                <li><a class="menu-item" sec:authorize="isAuthenticated()" th:href="@{/calendar/list}">숙소예약</a></li>
-                <li><a class="menu-item" sec:authorize="isAuthenticated()" th:href="@{/user/showmypage}">마이페이지</a></li>
-                <li sec:authorize="isAuthenticated()" th:if="${loginUser != null and loginUser.isCheckedAdmin()}">
-                    <a class="menu-item" th:href="@{/admin/user/list}">관리자페이지</a>
+            <ul class="menu menu-horizontal collapse navbar-collapse">
+                <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/user/logout}">로그아웃</a></li>
+                <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/notice/list}">공지사항</a></li>
+                <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/article/list}">자유게시판</a></li>
+                <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/calendar/list}">숙소예약</a></li>
+                <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/user/showmypage}">마이페이지</a></li>
+                <li sec:authorize="isAuthenticated()" class="menu-item" th:if="${loginUser != null and loginUser.isCheckedAdmin()}">
+                    <a th:href="@{/admin/user/list}">관리자페이지</a>
                 </li>
+                <li sec:authorize="isAnonymous()" class="menu-item"><a th:href="@{/user/login}">로그인</a></li>
+                <li sec:authorize="isAnonymous()" class="menu-item"><a th:href="@{/user/signup}">회원가입</a></li>
             </ul>
         </div>
     </div>

@@ -28,6 +28,8 @@ public class SiteUser extends BaseEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean checkedAdmin;
 
+    private String checkedAdminPassword;
+
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     @Setter
     private boolean checkedWithdrawal;

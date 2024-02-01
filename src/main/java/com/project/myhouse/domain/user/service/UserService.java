@@ -115,5 +115,17 @@ public class UserService {
         return this.userRepository.findById(id);
     }
 
-
+    @Transactional
+    public SiteUser adminCreate(String username, String nickname, String password, String phone, String adminpw) {
+        SiteUser user = SiteUser.builder()
+                .userId(username)
+                .nickname(nickname)
+                .password(passwordEncoder.encode(password))
+                .phone(phone)
+                .createDate(LocalDateTime.now())
+                .checkedAdminPassword(adminpw)
+                .build();
+        this.userRepository.save(user);
+        return user;
+    }
 }
