@@ -1,8 +1,8 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3" style="flex: 1;">
-    <div class="my-3 border-bottom">
+<div layout:fragment="content" class="container my-3 card shrink-0 w-full max-w-sm shadow-2xl bg-base-100" style="flex: 1;">
+    <div class="my-3">
         <div>
-            <h1>마이페이지</h1>
+            <h2 style="font-size: 30px;" class="my-3 border-bottom pb-2">마이페이지</h2>
         </div>
     </div>
     <form th:object="${userMypageForm}" method="post">
@@ -21,7 +21,7 @@
             <input type="text" id="phone" name="phone" th:value="${userMypageForm.phone}" class="form-control input input-bordered input-accent" disabled>
         </div>
         <div class="col-6">
-            <a th:href="@{/user/mypage}" class="btn bg-orange-300 hover:bg-orange-300">정보 수정하기</a>
+            <a th:href="@{/user/mypage}" style="margin-bottom: 10px;" class="btn bg-orange-300 hover:bg-orange-300">정보 수정하기</a>
             <a th:unless="${#strings.containsIgnoreCase(#authentication.name, 'KAKAO')}" th:href="@{/user/changePw}" class="btn bg-orange-300 hover:bg-orange-300">비밀번호 변경</a>
         </div>
     </form>
