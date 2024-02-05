@@ -4,6 +4,8 @@ import com.project.myhouse.domain.user.entity.SiteUser;
 import com.project.myhouse.domain.user.form.AdminCreateForm;
 import com.project.myhouse.domain.user.form.UserCreateForm;
 import com.project.myhouse.domain.user.form.UserMypageForm;
+import com.project.myhouse.domain.user.form.UserPasswordForm;
+import com.project.myhouse.domain.user.service.PasswordService;
 import com.project.myhouse.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +26,7 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final PasswordService passwordService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
@@ -36,7 +40,7 @@ public class UserController {
             return "user/signup_form";
         }
 
-//        validatePassword(userCreateForm.getPassword1(), userCreateForm.getPassword2(), bindingResult);
+        validatePassword(userCreateForm.getPassword1(), userCreateForm.getPassword2(), bindingResult);
 
         try {
             userService.create(userCreateForm.getUserId(), userCreateForm.getNickname(), userCreateForm.getPassword1(), userCreateForm.getPhone());
@@ -83,6 +87,21 @@ public class UserController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/showmypage")
+    public String showmypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
+        String username = principal.getName();
+        SiteUser siteUser = this.userService.getUser(username);
+        if (!siteUser.getUserId().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        userCreateForm.setUserId(siteUser.getUserId());
+        userMypageForm.setNickname(siteUser.getNickname());
+        userMypageForm.setPhone(siteUser.getPhone());
+
+        return "user/mypage_detail";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/mypage")
     public String userModify(@Valid UserMypageForm userMypageForm,
                              BindingResult bindingResult, Principal principal) {
@@ -102,42 +121,63 @@ public class UserController {
         }
     }
 
+//    @GetMapping("/admin/signup")
+//    public String adminSignup(AdminCreateForm adminCreateForm) {
+//        return "user/admin_signup_form";
+//    }
+//
+//    @PostMapping("/admin/signup")
+//    public String adminSignup(@Valid AdminCreateForm adminCreateForm, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return "user/admin_signup_form";
+//        }
+//
+////        validatePassword(adminCreateForm.getPassword1(), adminCreateForm.getPassword2(), bindingResult);
+//
+//        try {
+//            userService.adminCreate(adminCreateForm.getUserId(), adminCreateForm.getNickname(), adminCreateForm.getPassword1(), adminCreateForm.getPhone(), adminCreateForm.getAdminPassword());
+//        } catch (DataIntegrityViolationException e) {
+//            handleUserCreationError(bindingResult);
+//        } catch (Exception e) {
+//            handleUnexpectedError(bindingResult, e);
+//        }
+//
+//        return "redirect:/";
+//    }
+
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/showmypage")
-    public String showmypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
+    @GetMapping("/changePw")
+    public String changePw(UserPasswordForm userPasswordForm) {
+        return "user/change_password";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/changePw")
+    public String changePassword(@Valid UserPasswordForm userPasswordForm, BindingResult bindingResult, Principal principal, Model model) {
         String username = principal.getName();
-        SiteUser siteUser = this.userService.getUser(username);
-        if (!siteUser.getUserId().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        SiteUser siteUser = userService.getUser(username);
+
+        // 기존 비밀번호 확인
+        if (!passwordEncoder.matches(userPasswordForm.getCurrentPassword(), siteUser.getPassword())) {
+            bindingResult.rejectValue("currentPassword", "passwordInCorrect", "기존 비밀번호가 일치하지 않습니다.");
         }
-        userCreateForm.setUserId(siteUser.getUserId());
-        userMypageForm.setNickname(siteUser.getNickname());
-        userMypageForm.setPhone(siteUser.getPhone());
 
-        return "user/mypage_detail";
-    }
+        // 새로운 비밀번호와 비밀번호 확인이 일치하는지 확인
+        if (!userPasswordForm.getNewPassword().equals(userPasswordForm.getConfirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "passwordInCorrect", "새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
 
-    @GetMapping("/admin/signup")
-    public String adminSignup(AdminCreateForm adminCreateForm) {
-        return "user/admin_signup_form";
-    }
-
-    @PostMapping("/admin/signup")
-    public String adminSignup(@Valid AdminCreateForm adminCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "user/admin_signup_form";
+            return "user/change_password"; // 에러가 있으면 변경 페이지로 다시 이동
         }
 
-//        validatePassword(adminCreateForm.getPassword1(), adminCreateForm.getPassword2(), bindingResult);
-
+        // 비밀번호 변경
         try {
-            userService.adminCreate(adminCreateForm.getUserId(), adminCreateForm.getNickname(), adminCreateForm.getPassword1(), adminCreateForm.getPhone(), adminCreateForm.getAdminPassword());
-        } catch (DataIntegrityViolationException e) {
-            handleUserCreationError(bindingResult);
-        } catch (Exception e) {
-            handleUnexpectedError(bindingResult, e);
+            userService.changePw(siteUser, userPasswordForm.getNewPassword());
+            return "redirect:/user/showmypage"; // 성공 페이지로 리다이렉트 또는 성공 메시지를 표시하는 뷰로 이동
+        } catch (RuntimeException e) {
+            model.addAttribute("error", "비밀번호 변경에 실패했습니다.");
+            return "redirect:/user/changePw"; // 에러 페이지로 리다이렉트 또는 에러 메시지를 표시하는 뷰로 이동
         }
-
-        return "redirect:/";
     }
 }

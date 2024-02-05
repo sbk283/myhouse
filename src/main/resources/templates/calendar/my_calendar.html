@@ -3,7 +3,7 @@
 <div layout:fragment="content" class="container mx-auto" style="flex: 1;">
     <div class="btn-container" style="display: flex; justify-content: space-between; align-items: center; margin: 10px">
         <h2 style="font-size: 30px; margin: 0;">예약현황</h2>
-        <a th:href="@{/calendar/list}" class="btn btn-primary">돌아가기</a>
+        <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">돌아가기</a>
     </div>
 
     <table class="table overflow-x-auto">
@@ -27,18 +27,15 @@
             <td class="my-3 text-center">
                 <a th:href="@{|/calendar/modify/${calendar.Id}|}"
                    th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
-                   class="btn" th:text="수정"></a>
+                   class="btn bg-orange-300 hover:bg-orange-300" th:text="수정"></a>
                 <a onclick="return confirm('정말로 삭제 하시겠습니까?');"
                    th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
                    th:href="@{|/calendar/delete/${calendar.id}|}"
-                   class="btn" sec:authorize="isAuthenticated()" th:text="삭제"></a>
+                   class="btn bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()" th:text="삭제"></a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
 </body>
-
-<!-- 여기에 필요한 스크립트 링크 및 스크립트 추가 -->
-
 </html>

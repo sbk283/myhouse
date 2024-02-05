@@ -15,20 +15,20 @@
             </div>
             <div class="my-3">
                 <div class="my-3">
-                    <div class="badge badge-secondary badge-outline">
+                    <div class="badge badge-outline">
                         <div th:text="${#temporals.format(notice.createDate, '작성일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
                     </div>
                     <br>
-                    <div th:if="${notice.modifiedDate != null}" class="badge badge-secondary badge-outline">
+                    <div th:if="${notice.modifiedDate != null}" class="badge badge-outline">
                         <div th:text="${#temporals.format(notice.modifiedDate, '수정일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
                     </div>
                 </div>
-                <a th:href="@{|/notice/modify/${notice.id}|}" class="btn btn-secondary"
+                <a th:href="@{|/notice/modify/${notice.id}|}" class="btn bg-orange-300 hover:bg-orange-300"
                    sec:authorize="isAuthenticated()"
                    th:if="${notice.user != null and #authentication.getPrincipal().getUsername() == notice.user.userId}"
                    th:text="수정"></a>
                 <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/notice/delete/${notice.id}|}"
-                   class="btn btn-secondary" sec:authorize="isAuthenticated()"
+                   class="btn bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()"
                    th:if="${notice.user != null and #authentication.getPrincipal().getUsername() == notice.user.userId}"
                    th:text="삭제"></a>
                 <!-- 관리자 전용 삭제 버튼 -->
@@ -38,6 +38,6 @@
             </div>
         </div>
     </div>
-    <a th:href="@{/notice/list}" class="btn btn-secondary">목록보기</a>
+    <a th:href="@{/notice/list}" class="btn bg-orange-300 hover:bg-orange-300">목록보기</a>
 </div>
 </html>

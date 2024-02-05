@@ -1,33 +1,35 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3" style="flex: 1;">
-  <div class="my-3 border-bottom">
-    <div>
-      <h2>회원가입</h2>
+<div layout:fragment="content" class="hero-content flex-col lg:flex-row-reverse" style="flex: 1; margin: auto;">
+  <div>
+    <div class="text-center lg:text-left shrink-0 w-full max-w-sm" style="margin-bottom: 20px;">
+      <h2 class="text-4xl font-bold">회원가입</h2>
+    </div>
+    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+      <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post" class="card-body">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+          <label for="userId" class="form-label">사용자ID</label>
+          <input type="text" style="width: 318px;" th:field="*{userId}" class="form-control input input-bordered input-accent w-full max-w-xs">
+        </div>
+        <div class="mb-3">
+          <label for="nickname" class="form-label">닉네임</label>
+          <input type="text" style="width: 318px;" th:field="*{nickname}" class="form-control input input-bordered input-accent w-full max-w-xs">
+        </div>
+        <div class="mb-3">
+          <label for="password1" class="form-label">비밀번호</label>
+          <input type="password" style="width: 318px;" th:field="*{password1}" class="form-control input input-bordered input-accent w-full max-w-xs">
+        </div>
+        <div class="mb-3">
+          <label for="password2" class="form-label">비밀번호 확인</label>
+          <input type="password" style="width: 318px;" th:field="*{password2}" class="form-control input input-bordered input-accent w-full max-w-xs">
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">전화번호</label>
+          <input type="text" style="width: 318px;" th:field="*{phone}" class="form-control input input-bordered input-accent w-full max-w-xs">
+        </div>
+        <button type="submit" class="btn bg-orange-300 hover:bg-orange-300">회원가입</button>
+      </form>
     </div>
   </div>
-  <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
-    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-    <div class="mb-3">
-      <label for="userId" class="form-label">사용자ID</label>
-      <input type="text" th:field="*{userId}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="nickname" class="form-label">닉네임</label>
-      <input type="text" th:field="*{nickname}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="password1" class="form-label">비밀번호</label>
-      <input type="password" th:field="*{password1}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="password2" class="form-label">비밀번호 확인</label>
-      <input type="password" th:field="*{password2}" class="form-control">
-    </div>
-    <div class="mb-3">
-      <label for="phone" class="form-label">전화번호</label>
-      <input type="text" th:field="*{phone}" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-primary">회원가입</button>
-  </form>
 </div>
 </html>

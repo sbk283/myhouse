@@ -57,7 +57,7 @@ public class NoticeController {
         SiteUser loginUser = this.userService.getUser(principal.getName());
 
         if(loginUser.isCheckedAdmin()) {
-            model.addAttribute("noticeForm", new NoticeCreateForm());
+            model.addAttribute("noticeCreateForm", new NoticeCreateForm());
             model.addAttribute("request", request);
             return "notice/notice_form";
         }
@@ -66,7 +66,7 @@ public class NoticeController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String create(@Valid NoticeCreateForm noticeForm, BindingResult bindingResult, Principal principal, @RequestParam("thumbnail") MultipartFile thumbnail,
+    public String create(@Valid NoticeCreateForm noticeCreateForm, BindingResult bindingResult, Principal principal, @RequestParam("thumbnail") MultipartFile thumbnail,
                          HttpServletRequest request, Model model) {
 
         SiteUser loginUser = userService.getUser(principal.getName());
@@ -74,11 +74,14 @@ public class NoticeController {
             if (bindingResult.hasErrors()) {
 
                 model.addAttribute("request", request);
-                model.addAttribute("noticeForm", noticeForm);
+                model.addAttribute("noticeCreateForm", noticeCreateForm);
                 return "notice/notice_form";
             }
+            if (noticeCreateForm.getTitle() == null) {
+                bindingResult.rejectValue("title", "NullTitle", "제목을 입력해주세요.");
+            }
 
-            this.noticeService.create(noticeForm.getTitle(), noticeForm.getContent(), loginUser, thumbnail);
+            this.noticeService.create(noticeCreateForm.getTitle(), noticeCreateForm.getContent(), loginUser, thumbnail);
             return "redirect:/notice/list";
         }
         return "redirect:/notice/list";
@@ -86,28 +89,34 @@ public class NoticeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String noticeModify(NoticeCreateForm noticeForm, @PathVariable("id") Long id, Principal principal) {
+    public String noticeModify(NoticeCreateForm noticeCreateForm, @PathVariable("id") Long id, Principal principal, BindingResult bindingResult) {
         Notice notice = this.noticeService.getNotice(id);
         if(!notice.getUser().getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        noticeForm.setTitle(notice.getTitle());
-        noticeForm.setContent(notice.getContent());
+        noticeCreateForm.setTitle(notice.getTitle());
+        noticeCreateForm.setContent(notice.getContent());
         return "notice/notice_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String noticeModify(@Valid NoticeCreateForm noticeForm, BindingResult bindingResult,
-                               Principal principal, @PathVariable("id") Long id) {
+    public String noticeModify(@Valid NoticeCreateForm noticeCreateForm, BindingResult bindingResult,
+                               Principal principal, @PathVariable("id") Long id, Model model) {
         if (bindingResult.hasErrors()) {
             return "notice/notice_form";
+        }
+        if (noticeCreateForm.getTitle() == null) {
+            bindingResult.rejectValue("NotNullTitle", "NotNullTitle", "제목을 입력해주세요.");
+        }
+        if (noticeCreateForm.getContent() == null) {
+            bindingResult.rejectValue("NotNullContent", "NotNullContent", "내용을 입력해주세요.");
         }
         Notice notice = this.noticeService.getNotice(id);
         if(!notice.getUser().getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.noticeService.modify(notice, noticeForm.getTitle(), noticeForm.getContent());
+        this.noticeService.modify(notice, noticeCreateForm.getTitle(), noticeCreateForm.getContent());
         return String.format("redirect:/notice/detail/%s", id);
     }
 

@@ -10,13 +10,13 @@
                 <label for="subject" class="form-label">방문하시는 분의 성함을 입력해주세요.</label>
                 <br>
                 <input type="text" th:field="*{title}" name="subject" id="subject"
-                       class="input input-bordered input-secondary w-full max-w-xs" th:value="${calendarForm.getTitle()}" autocomplete='off'>
+                       class="input input-bordered input-accent w-full max-w-xs" th:value="${calendarForm.getTitle()}" autocomplete='off'>
             </div>
             <div class="mb-3">
                 <label for="subject" class="form-label">세부사항을 입력해주세요.</label>
                 <br>
                 <textarea type="text" th:field="*{content}" name="subject" id="subject" style="height: 150px;"
-                       class="textarea textarea-secondary w-full max-w-xs" th:value="${calendarForm.getContent()}" autocomplete='off'>
+                       class="textarea textarea-accent w-full max-w-xs" th:value="${calendarForm.getContent()}" autocomplete='off'>
 
                 </textarea>
             </div>
@@ -24,20 +24,20 @@
                 <span class="text-sm font-medium text-gray-600 mb-2">기간을 선택해주세요</span>
                 <div class="flex items-center">
                     <input type="text" name="start" id="datepicker1"
-                           class="input input-bordered input-secondary w-full max-w-xs"
+                           class="input input-bordered input-accent w-full max-w-xs"
                            th:value="${calendarForm.getStart()}"
                            autocomplete="off">
                     <span class="mx-2">부터</span>
                     <input type="text" name="end" id="datepicker2"
-                           class="input input-bordered input-secondary w-full max-w-xs"
+                           class="input input-bordered input-accent w-full max-w-xs"
                            th:value="${calendarForm.getEnd()}"
                            autocomplete="off">
                     <span class="mx-2">까지</span>
                 </div>
             </div>
             <br>
-            <input type="submit" value="예약" class="btn btn-primary">
-            <a th:href="@{/calendar/list}" class="btn btn-primary">취소</a>
+            <input type="submit" value="예약" class="btn bg-orange-300 hover:bg-orange-300">
+            <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">취소</a>
         </form>
     </div>
 </div>

@@ -8,19 +8,19 @@
     <form th:object="${userMypageForm}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-        <div class="mb-3" th:if="${userCreateForm != null}">
+        <div th:unless="${#strings.containsIgnoreCase(#authentication.name, 'KAKAO')}" class="mb-3">
             <label for="userId" class="form-label">사용자ID</label>
-            <input type="text" id="userId" name="userId" th:value="${userCreateForm.userId}" class="form-control" disabled>
+            <input type="text" id="userId" name="userId" th:value="${userCreateForm.userId}" class="form-control input input-bordered input-accent" disabled>
         </div>
         <div class="mb-3">
             <label for="nickname" class="form-label">닉네임</label>
-            <input type="text" id="nickname" name="nickname" th:value="${userMypageForm.nickname}" class="form-control">
+            <input type="text" id="nickname" name="nickname" th:value="${userMypageForm.nickname}" class="form-control input input-bordered input-accent">
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">전화번호</label>
-            <input type="text" id="phone" name="phone" th:value="${userMypageForm.phone}" class="form-control">
+            <input type="text" id="phone" name="phone" th:value="${userMypageForm.phone}" class="form-control input input-bordered input-accent">
         </div>
-        <button type="submit" class="btn btn-primary" th:herf="@{/user/showmypage}">수정하기</button>
+        <button type="submit" class="btn bg-orange-300 hover:bg-orange-300" th:herf="@{/user/showmypage}">수정하기</button>
     </form>
 </div>
 </html>

@@ -2,6 +2,7 @@ package com.project.myhouse.domain.user.service;
 
 import com.project.myhouse.domain.user.entity.SiteUser;
 
+import com.project.myhouse.domain.user.form.UserPasswordForm;
 import com.project.myhouse.domain.user.repository.UserRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -36,6 +37,20 @@ public class UserService {
                 .password(passwordEncoder.encode(password))
                 .phone(phone)
                 .createDate(LocalDateTime.now())
+                .build();
+        this.userRepository.save(user);
+        return user;
+    }
+
+    @Transactional
+    public SiteUser adminCreate(String username, String nickname, String password, String phone, boolean checkedAdmin) {
+        SiteUser user = SiteUser.builder()
+                .userId(username)
+                .nickname(nickname)
+                .password(passwordEncoder.encode(password))
+                .phone(phone)
+                .createDate(LocalDateTime.now())
+                .checkedAdmin(true)
                 .build();
         this.userRepository.save(user);
         return user;
@@ -82,6 +97,25 @@ public class UserService {
                 });
     }
 
+    @Transactional
+    public void changePw(SiteUser user, String password) {
+        this.userRepository.findByUserId(user.getUserId())
+                .ifPresent(updateUser -> {
+                    SiteUser modifyUser = SiteUser.builder()
+                            .id(updateUser.getId())
+                            .userId(user.getUserId())
+                            .nickname(user.getNickname())
+                            .password(passwordEncoder.encode(password))
+                            .phone(user.getPhone())
+                            .createDate(user.getCreateDate())
+                            .modifiedDate(LocalDateTime.now())
+                            .checkedAdmin(user.isCheckedAdmin())
+                            .checkedWithdrawal(user.isCheckedWithdrawal())
+                            .build();
+                    this.userRepository.save(modifyUser);
+                });
+    }
+
     public Page<SiteUser> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
@@ -115,17 +149,44 @@ public class UserService {
         return this.userRepository.findById(id);
     }
 
-    @Transactional
-    public SiteUser adminCreate(String username, String nickname, String password, String phone, String adminpw) {
-        SiteUser user = SiteUser.builder()
-                .userId(username)
-                .nickname(nickname)
-                .password(passwordEncoder.encode(password))
-                .phone(phone)
-                .createDate(LocalDateTime.now())
-                .checkedAdminPassword(adminpw)
-                .build();
-        this.userRepository.save(user);
-        return user;
-    }
+//    @Transactional
+//    public SiteUser adminCreate(String username, String nickname, String password, String phone, String adminpw) {
+//        SiteUser user = SiteUser.builder()
+//                .userId(username)
+//                .nickname(nickname)
+//                .password(passwordEncoder.encode(password))
+//                .phone(phone)
+//                .createDate(LocalDateTime.now())
+//                .checkedAdminPassword(adminpw)
+//                .build();
+//        this.userRepository.save(user);
+//        return user;
+//    }
+
+//    @Transactional
+//    public SiteUser changePw(UserPasswordForm userPasswordForm, SiteUser siteUser) {
+//        if (userPasswordForm != null && siteUser != null) {
+//            // 기존 비밀번호 확인
+//            if (passwordEncoder.matches(siteUser.getPassword(), userPasswordForm.getMyPassword())) {
+//                // 새 비밀번호와 새 비밀번호 확인이 일치하는지 확인
+//                if (userPasswordForm.getChangePassword1().equals(userPasswordForm.getChangePassword2())) {
+//                    // 입력된 기존 비밀번호가 현재 비밀번호와 일치하고, 새 비밀번호와 새 비밀번호 확인이 일치하면 비밀번호 변경 진행
+//                    siteUser.setPassword(passwordEncoder.encode(userPasswordForm.getChangePassword1()));
+//                    // 변경된 SiteUser를 저장하고 반환
+//                    return userRepository.save(siteUser);
+//                } else {
+//                    // 새 비밀번호와 새 비밀번호 확인이 일치하지 않을 경우 예외처리 또는 적절한 로직 수행
+//                    throw new RuntimeException("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
+//                }
+//            } else {
+//                // 기존 비밀번호가 일치하지 않을 경우 예외처리 또는 적절한 로직 수행
+//                throw new RuntimeException("기존 비밀번호가 일치하지 않습니다.");
+//            }
+//        } else {
+//            throw new RuntimeException("userPasswordForm 또는 siteUser가 null입니다.");
+//        }
+//    }
+
+
+
 }

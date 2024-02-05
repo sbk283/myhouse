@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.sql.ConnectionBuilder;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -28,7 +30,7 @@ public class SiteUser extends BaseEntity {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean checkedAdmin;
 
-    private String checkedAdminPassword;
+//    private String checkedAdminPassword;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     @Setter

@@ -6,7 +6,7 @@
             <form>
                 <div class="input-group admin-user">
                     <input type="text" name="kw" id="search_kw" class="form-control" th:value="${param.kw}">
-                    <button class="btn btn-outline-secondary" id="btn_search">찾기</button>
+                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
                 </div>
             </form>
         </div>
@@ -27,35 +27,47 @@
             <td class="text-center" th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}" style="width: 10%;"></td>
             <td class="text-center" th:text="${siteUser.userId}" style="width: 15%;"></td>
             <td class="text-center" th:text="${siteUser.nickname}" style="width: 15%;"></td>
-            <td class="text-center" th:text="${#temporals.format(siteUser.createDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}" style="width: 20%;"></td>
-            <td class="text-center" th:text="${#temporals.format(siteUser.modifiedDate, 'yyyy년 MM월 dd일 HH시 mm분 ss초')}" style="width: 20%;"></td>
+            <td class="text-center" style="width: 20%;">
+                <div th:text="${#temporals.format(siteUser.createDate, 'yyyy년 MM월 dd일')}"></div>
+                <div th:text="${#temporals.format(siteUser.createDate, 'HH시 mm분 ss초')}"></div>
+            </td>
+            <td class="text-center" style="width: 20%;">
+                <div th:text="${#temporals.format(siteUser.modifiedDate, 'yyyy년 MM월 dd일')}"></div>
+                <div th:text="${#temporals.format(siteUser.modifiedDate, 'HH시 mm분 ss초')}"></div>
+            </td>
             <td>
                 <span th:if="${siteUser.checkedWithdrawal}">탈퇴한 사용자</span>
                 <form th:unless="${siteUser.checkedWithdrawal}" th:action="@{/admin/user/delete/{userId}(userId=${siteUser.userId})}" method="post"
                       onsubmit="return confirm('정말 탈퇴시키겠습니까?');">
                     <input type="hidden" name="userId" th:value="${siteUser.userId}"/>
-                    <button type="submit" class="btn btn-secondary" sec:authorize="isAuthenticated()">탈퇴</button>
+                    <button type="submit" class="btn btn-secondary bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()">탈퇴</button>
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
     <!-- 페이징처리 시작 -->
-    <nav th:if="${!paging.isEmpty()}" th:with="kwBase = '?kw=' + ${param.kw != null ? param.kw : ''}" >
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{|${kwBase}&page=${paging.number - 1}|}">이전</a>
+    <nav aria-label="Page navigation" style="justify-content: center;">
+        <ul class="flex items-center h-10 text-m" style="justify-content: center; margin-top: 20px;">
+            <li th:classappend="${!paging.hasPrevious} ? 'opacity-50 pointer-events-none'">
+                <a th:href="@{|${kwBase}&page=${paging.number - 1}|}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                    </svg>
+                </a>
             </li>
-
             <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
                 th:if="${page >= paging.number-5 and page <= paging.number+5}"
-                th:classappend="${page == paging.number} ? 'active'"
-                class="page-item">
-                <a  th:text="${page + 1}" class="page-link" th:href="@{|${kwBase}&page=${page}|}"></a>
+                th:classappend="${page == paging.number} ? 'active' : ''"
+                class="relative">
+                <a th:if="${page != null}" th:with="kwBase = '?kw=' + ${param.kw != null ? param.kw : ''}" th:text="${page + 1}" th:href="@{|${kwBase}&page=${page}|}" class="flex items-center justify-center px-3 h-8 leading-tight bg-orange-300 hover:bg-orange-300 border border-gray-300 hover:text-gray-700"></a>
             </li>
-
-            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{|${kwBase}&page=${paging.number + 1}|}">다음</a>
+            <li th:classappend="${!paging.hasNext} ? 'opacity-50 pointer-events-none'">
+                <a th:href="@{|${kwBase}&page=${paging.number + 1}|}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg>
+                </a>
             </li>
         </ul>
     </nav>
