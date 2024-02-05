@@ -106,15 +106,15 @@ public class NoticeController {
         if (bindingResult.hasErrors()) {
             return "notice/notice_form";
         }
+        Notice notice = this.noticeService.getNotice(id);
+        if(!notice.getUser().getUserId().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
         if (noticeCreateForm.getTitle() == null) {
             bindingResult.rejectValue("NotNullTitle", "NotNullTitle", "제목을 입력해주세요.");
         }
         if (noticeCreateForm.getContent() == null) {
             bindingResult.rejectValue("NotNullContent", "NotNullContent", "내용을 입력해주세요.");
-        }
-        Notice notice = this.noticeService.getNotice(id);
-        if(!notice.getUser().getUserId().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         this.noticeService.modify(notice, noticeCreateForm.getTitle(), noticeCreateForm.getContent());
         return String.format("redirect:/notice/detail/%s", id);

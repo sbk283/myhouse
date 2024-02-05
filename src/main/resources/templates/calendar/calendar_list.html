@@ -48,6 +48,7 @@
             text-decoration: none;
             cursor: pointer;
         }
+
     </style>
         <!-- FullCalendar 컨테이너 -->
         <div class="calendarWidth" id='calendar'></div>
@@ -119,4 +120,10 @@
 
         // 기존 로케일 선택자 설정 유지
     });
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        contentHeight: 600
+    });
+
+    calendar.setOption('contentHeight', 650);
 </script>
