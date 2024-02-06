@@ -37,21 +37,24 @@
     <!-- 페이징처리 시작 -->
     <nav aria-label="Page navigation" style="justify-content: center;">
         <ul class="flex items-center h-10 text-m" style="justify-content: center; margin-top: 20px;">
-            <li th:classappend="${!paging.hasPrevious} ? 'opacity-50 pointer-events-none'">
-                <a th:href="@{|${kwBase}&page=${paging.number - 1}|}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <!-- 이전 버튼 -->
+            <li th:classappend="${!paging.hasPrevious or paging.number == 0} ? 'opacity-50 pointer-events-none'">
+                <a th:href="@{/notice/list(kw=${param.kw},page=${paging.number - 1})}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                     <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
                     </svg>
                 </a>
             </li>
+            <!-- 페이지 번호 -->
             <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
-                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5 and page >= 0}"
                 th:classappend="${page == paging.number} ? 'active' : ''"
                 class="relative">
-                <a th:if="${page != null}" th:with="kwBase = '?kw=' + ${param.kw != null ? param.kw : ''}" th:text="${page + 1}" th:href="@{|${kwBase}&page=${page}|}" class="flex items-center justify-center px-3 h-8 leading-tight bg-orange-300 hover:bg-orange-300 border border-gray-300 hover:text-gray-700"></a>
+                <a th:if="${page != null}" th:text="${page + 1}" th:href="@{/notice/list(kw=${param.kw},page=${page})}" class="flex items-center justify-center px-3 h-8 leading-tight bg-orange-300 hover:bg-orange-500 border border-gray-300 hover:text-gray-700"></a>
             </li>
-            <li th:classappend="${!paging.hasNext} ? 'opacity-50 pointer-events-none'">
-                <a th:href="@{|${kwBase}&page=${paging.number + 1}|}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+            <!-- 다음 버튼 -->
+            <li th:classappend="${!paging.hasNext or paging.number == paging.totalPages-1} ? 'opacity-50 pointer-events-none'">
+                <a th:href="@{/notice/list(kw=${param.kw},page=${paging.number + 1})}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                     <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>

@@ -77,6 +77,7 @@ public class NoticeService {
                 .modifiedDate(LocalDateTime.now())
                 .title(title)
                 .content(content)
+                .thumbnailImg(notice.getThumbnailImg())
                 .user(notice.getUser())
                 .build();
         this.noticeRepository.save(modiftNotice);

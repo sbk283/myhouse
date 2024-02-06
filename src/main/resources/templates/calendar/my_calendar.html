@@ -1,9 +1,17 @@
 <html layout:decorate="~{layout}">
-<body>
 <div layout:fragment="content" class="container mx-auto" style="flex: 1;">
-    <div class="btn-container" style="display: flex; justify-content: space-between; align-items: center; margin: 10px">
-        <h2 style="font-size: 30px; margin: 0;">예약현황</h2>
-        <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">돌아가기</a>
+    <div class="row my-3">
+        <div class="col-6">
+            <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">돌아가기</a>
+        </div>
+        <div class="col-6">
+            <form>
+                <div class="input-group">
+                    <input type="text" name="kw" id="search_kw" class="form-control input input-bordered input-accent" th:value="${param.kw}">
+                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <table class="table overflow-x-auto">
@@ -37,5 +45,4 @@
         </tbody>
     </table>
 </div>
-</body>
 </html>

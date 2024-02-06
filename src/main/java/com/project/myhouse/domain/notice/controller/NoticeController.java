@@ -110,12 +110,6 @@ public class NoticeController {
         if(!notice.getUser().getUserId().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        if (noticeCreateForm.getTitle() == null) {
-            bindingResult.rejectValue("NotNullTitle", "NotNullTitle", "제목을 입력해주세요.");
-        }
-        if (noticeCreateForm.getContent() == null) {
-            bindingResult.rejectValue("NotNullContent", "NotNullContent", "내용을 입력해주세요.");
-        }
         this.noticeService.modify(notice, noticeCreateForm.getTitle(), noticeCreateForm.getContent());
         return String.format("redirect:/notice/detail/%s", id);
     }
@@ -124,9 +118,12 @@ public class NoticeController {
     @GetMapping("/delete/{id}")
     public String noticeDelete(Principal principal, @PathVariable("id") Long id) {
         Notice notice = this.noticeService.getNotice(id);
-        if(!notice.getUser().getUserId().equals(principal.getName())) {
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+
+        if(!siteUser.isCheckedAdmin()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
+
         this.noticeService.delete(notice);
         return "redirect:/";
     }

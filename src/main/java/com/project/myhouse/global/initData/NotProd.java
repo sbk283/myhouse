@@ -1,5 +1,8 @@
 package com.project.myhouse.global.initData;
 
+import com.project.myhouse.domain.article.service.ArticleService;
+import com.project.myhouse.domain.notice.service.NoticeService;
+import com.project.myhouse.domain.user.entity.SiteUser;
 import com.project.myhouse.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -15,7 +18,7 @@ public class NotProd {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    public ApplicationRunner init(UserService userService) {
+    public ApplicationRunner init(UserService userService, NoticeService noticeService, ArticleService articleService) {
         return args -> {
 //            userService.adminCreate("admin1", "관리자1", "admin", "01000000001",true);
 //            userService.adminCreate("admin2", "관리자2", "admin", "01000000002",true);

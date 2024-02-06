@@ -74,6 +74,7 @@ public class ArticleService {
                 .modifiedDate(LocalDateTime.now())
                 .title(title)
                 .content(content)
+                .thumbnailImg(article.getThumbnailImg())
                 .user(article.getUser())
                 .build();
         this.articleRepository.save(modifiyArticle);
