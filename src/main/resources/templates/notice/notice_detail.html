@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="card-text" th:utext="${@commonUtil.markdown(notice.content)}"></div>
             <div>
-                <img th:src="@{|/file/${notice.thumbnailImg}|}" alt="images">
+                <img th:src="@{|/file/${notice.thumbnailImg}|}" class="figure-img img-fluid rounded" alt="images">
             </div>
             <div class="my-3">
                 <div class="my-3">

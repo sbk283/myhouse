@@ -1,11 +1,15 @@
+<style>
+
+</style>
 <html layout:decorate="~{layout}">
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-    <div class="navbar bg-base-100">
-        <div class="flex-1">
-            <a th:href="@{/}" class="btn btn-ghost text-xl">MyHouse<i class="fa-solid fa-people-roof"></i></a>
+    <div class="navbar bg-base-100" style="justify-content: center;">
+        <div style="justify-content: center;">
+            <a th:href="@{/}" class="btn btn-ghost text-xl logo">MyHouse<i class="fa-solid fa-people-roof"></i></a>
         </div>
-        <div class="flex-none">
-            <ul class="menu menu-horizontal collapse navbar-collapse">
+        <div style="width: 100%;"></div>
+        <div style="justify-content: center;">
+            <ul class="menu menu-horizontal navbar-collapse" style="justify-content: center;">
                 <li sec:authorize="isAuthenticated()" class="menu-item "><a th:href="@{/user/logout}">로그아웃</a></li>
                 <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/notice/list}">공지사항</a></li>
                 <li sec:authorize="isAuthenticated()" class="menu-item"><a th:href="@{/article/list}">자유게시판</a></li>

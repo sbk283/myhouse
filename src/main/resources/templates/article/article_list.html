@@ -29,7 +29,7 @@
                 <a th:href="@{|/article/detail/${article.id}|}" th:text="${article.title}" style="text-decoration: none;"></a>
             </td>
             <td><span th:if="${article.user != null}" th:text="${article.user.nickname}"></span></td>
-            <td th:text="${#temporals.format(article.createDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
+            <td th:text="${#temporals.format(article.createDate, 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>

@@ -1,6 +1,5 @@
 package com.project.myhouse.domain.calendar.controller;
 
-import com.project.myhouse.domain.article.entity.Article;
 import com.project.myhouse.domain.calendar.entity.Calendar;
 import com.project.myhouse.domain.calendar.form.CalendarForm;
 import com.project.myhouse.domain.calendar.service.CalendarService;
@@ -14,7 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/calendar")
 @RequiredArgsConstructor
 public class CalendarController {
 
@@ -31,35 +32,25 @@ public class CalendarController {
     private final UserService userService;
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping(value = {"/list"})
-    public String list(Model model, HttpServletRequest request,
-                       @RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "kw", defaultValue = "") String kw) {
-        if (request != null) {
-            // calendar logic
-            List<Calendar> calendarList = this.calendarService.findAll();
-            List<CalendarForm> calendarFormList = new ArrayList<>();
-            for (Calendar calendar : calendarList) {
-                CalendarForm sc1 = new CalendarForm();
-                sc1.setTitle(calendar.getTitle());
-                sc1.setStart(calendar.getStartDate().toString());
-                sc1.setEnd(calendar.getEndDate().plusDays(1).toString());
-                calendarFormList.add(sc1);
-            }
-
-            model.addAttribute("calendarList", calendarFormList);
-            model.addAttribute("request", request);
-            return "calendar/calendar_list";
-        } else {
-            Page<Calendar> paging = this.calendarService.getList(page, kw);
-            model.addAttribute("paging", paging);
-            return "article/article_list";
+    @GetMapping("/calendar/list")
+    public String list(Model model, HttpServletRequest request) {
+        List<Calendar> calendarList = this.calendarService.findAll();
+        List<CalendarForm> calendarFormList = new ArrayList<>();
+        for (Calendar calendar : calendarList) {
+            CalendarForm sc1 = new CalendarForm();
+            sc1.setTitle(calendar.getTitle());
+            sc1.setStart(calendar.getStartDate().toString());
+            sc1.setEnd(calendar.getEndDate().plusDays(1).toString());
+            calendarFormList.add(sc1);
         }
+
+        model.addAttribute("calendarList", calendarFormList);;
+        model.addAttribute("request", request);
+        return "calendar/calendar_list";
     }
 
-
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/create")
+    @GetMapping("/calendar/create")
     public String create(Model model,
                          HttpServletRequest request) {
         model.addAttribute("calendarForm", new CalendarForm());
@@ -68,7 +59,7 @@ public class CalendarController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/create")
+    @PostMapping("/calendar/create")
     public String create(@Valid CalendarForm calendarForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
             return "calendar/calendar_form";
@@ -79,24 +70,32 @@ public class CalendarController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/manage")
+    @GetMapping("/calendar/manage")
     public String myCalendar(Model model, Principal principal,
-                             HttpServletRequest request) {
+                             HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "kw", defaultValue = "") String kw) {
         SiteUser siteUser = userService.getUser(principal.getName());
         List<Calendar> calendarList;
-//        if (siteUser.isCheckedAdmin()) {
-//            calendarList = this.calendarService.findAll();
-//        } else {
-//            calendarList = this.calendarService.findByUser(siteUser);
-//        }
-        calendarList = this.calendarService.findAll();
+        Page<Calendar> paging;
+
+        if (kw.isEmpty()) {
+            paging = this.calendarService.getList(page, kw);
+            calendarList = this.calendarService.findAll();
+        } else {
+            paging = this.calendarService.getList(page, kw);
+            calendarList = paging.getContent();
+        }
+
         model.addAttribute("myCalendar", calendarList);
         model.addAttribute("request", request);
+        model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw); // 검색어를 뷰로 전달
+
         return "calendar/my_calendar";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
+    @GetMapping("/calendar/delete/{id}")
     public String delete(Principal principal, @PathVariable("id") Long id) {
         SiteUser loginUser = this.userService.getUser(principal.getName());
         Calendar calendar = this.calendarService.getCalendar(id);
@@ -109,7 +108,7 @@ public class CalendarController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modify/{id}")
+    @GetMapping("/calendar/modify/{id}")
     public String modify(Principal principal,
                          @PathVariable("id") Long id,
                          Model model,
@@ -134,7 +133,7 @@ public class CalendarController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
+    @PostMapping("/calendar/modify/{id}")
     public String modify(@Valid CalendarForm calendarForm, Calendar calendar,
                          BindingResult bindingResult,
                          Principal principal,

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class CalendarService {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        Specification<Calendar> spec = search(kw);
+        Specification<Calendar> spec = searchSpecification(kw);
         return this.calendarRepository.findAll(spec, pageable);
     }
     public List<Calendar> findAll() {
@@ -77,17 +78,35 @@ public class CalendarService {
         this.calendarRepository.save(modifyCalendar);
     }
 
-    private Specification<Calendar> search(String kw) {
-        return new Specification<>() {
+    private Specification<Calendar> searchSpecification(String kw) {
+        return new Specification<Calendar>() {
             private static final long serialVersionUID = 1L;
+
             @Override
             public Predicate toPredicate(Root<Calendar> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true);  // 중복을 제거
-                Join<Notice, SiteUser> u1 = q.join("user", JoinType.LEFT);
-                return cb.or(cb.like(q.get("title"), "%" + kw + "%"), // 제목
-                        cb.like(q.get("content"), "%" + kw + "%"),      // 내용
-                        cb.like(u1.get("nickname"), "%" + kw + "%"));    // 질문 작성자
+                query.distinct(true);
+                Join<Calendar, SiteUser> u1 = q.join("user", JoinType.LEFT);
+
+                Predicate titlePredicate = cb.like(q.get("title"), "%" + kw + "%");
+                Predicate contentPredicate = cb.like(q.get("content"), "%" + kw + "%");
+                Predicate nicknamePredicate = cb.like(u1.get("nickname"), "%" + kw + "%");
+
+                try {
+                    // 검색어가 날짜 형식인 경우
+                    LocalDate searchDate = LocalDate.parse(kw);
+
+                    // startDate 또는 endDate에 대한 검색 조건 추가
+                    Predicate startDatePredicate = cb.equal(q.get("startDate"), searchDate);
+                    Predicate endDatePredicate = cb.equal(q.get("endDate"), searchDate);
+
+                    // 제목, 내용, 닉네임, 시작일, 종료일 중 하나라도 매치되면 반환
+                    return cb.or(titlePredicate, contentPredicate, nicknamePredicate, startDatePredicate, endDatePredicate);
+                } catch (DateTimeParseException e) {
+                    // 검색어가 날짜 형식이 아니면 startDate, endDate 검색 조건을 제외하고 나머지만 고려
+                    return cb.or(titlePredicate, contentPredicate, nicknamePredicate);
+                }
             }
         };
     }
+
 }

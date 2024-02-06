@@ -5,9 +5,9 @@
             <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">돌아가기</a>
         </div>
         <div class="col-6">
-            <form>
+            <form th:action="@{/calendar/manage}" method="get">
                 <div class="input-group">
-                    <input type="text" name="kw" id="search_kw" class="form-control input input-bordered input-accent" th:value="${param.kw}">
+                    <input type="text" name="kw" id="search_kw" class="form-control input input-bordered input-accent" th:value="${kw}">
                     <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
                 </div>
             </form>
@@ -17,22 +17,22 @@
     <table class="table overflow-x-auto">
         <thead class="table-zebra">
         <tr class="text-center">
-            <th>작성자</th>
-            <th>예약자 성함</th>
-            <th>세부사항</th>
-            <th>시작일자</th>
-            <th>종료일자</th>
-            <th>수정/삭제</th>
+            <th style="width:10%">작성자</th>
+            <th style="width:30%">예약자 성함</th>
+            <th style="width:30%">세부사항</th>
+            <th style="width:10%">시작일자</th>
+            <th style="width:10%">종료일자</th>
+            <th style="width:10%">수정/삭제</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="calendar, loop : ${myCalendar}">
-            <td class="text-center" th:text="${calendar.user.getNickname()}"></td>
-            <td class="text-center" th:text="${calendar.getTitle()}"></td>
-            <td class="text-center" th:text="${calendar.getContent()}"></td>
-            <td class="text-center" th:text="${calendar.getStartDate()}"></td>
-            <td class="text-center" th:text="${calendar.getEndDate()}"></td>
-            <td class="my-3 text-center">
+            <td class="text-center" th:text="${calendar.user.getNickname()}" style="height: 100px;"></td>
+            <td class="text-center" th:text="${calendar.getTitle()}" style="height: 100px;"></td>
+            <td class="text-center" th:text="${calendar.getContent()}" style="height: 100px;"></td>
+            <td class="text-center" th:text="${calendar.getStartDate()}" style="height: 100px;"></td>
+            <td class="text-center" th:text="${calendar.getEndDate()}" style="height: 100px;"></td>
+            <td class="my-3 text-center" style="height: 100px;">
                 <a th:href="@{|/calendar/modify/${calendar.Id}|}"
                    th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
                    class="btn bg-orange-300 hover:bg-orange-300" th:text="수정"></a>
@@ -44,5 +44,38 @@
         </tr>
         </tbody>
     </table>
+    <!-- 페이징처리 시작 -->
+<!--    <nav aria-label="Page navigation" style="justify-content: center;">-->
+<!--        <ul class="flex items-center h-10 text-m" style="justify-content: center; margin-top: 20px;">-->
+<!--            &lt;!&ndash; 이전 버튼 &ndash;&gt;-->
+<!--            <li th:classappend="${!paging.hasPrevious or paging.number == 0} ? 'opacity-50 pointer-events-none'">-->
+<!--                <a th:href="@{/calendar/manage(kw=${param.kw},page=${paging.number - 1})}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">-->
+<!--                    <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">-->
+<!--                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>-->
+<!--                    </svg>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            &lt;!&ndash; 페이지 번호 &ndash;&gt;-->
+<!--            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"-->
+<!--                th:if="${page >= paging.number-5 and page <= paging.number+5 and page >= 0}"-->
+<!--                th:classappend="${page == paging.number} ? 'active' : ''"-->
+<!--                class="relative">-->
+<!--                <a th:if="${page != null}" th:text="${page + 1}" th:href="@{/calendar/manage(kw=${param.kw},page=${page})}" class="flex items-center justify-center px-3 h-8 leading-tight bg-orange-300 hover:bg-orange-500 border border-gray-300 hover:text-gray-700"></a>-->
+<!--            </li>-->
+<!--            &lt;!&ndash; 다음 버튼 &ndash;&gt;-->
+<!--            <li th:classappend="${!paging.hasNext or paging.number == paging.totalPages-1} ? 'opacity-50 pointer-events-none'">-->
+<!--                <a th:href="@{/calendar/manage(kw=${param.kw},page=${paging.number + 1})}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">-->
+<!--                    <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">-->
+<!--                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>-->
+<!--                    </svg>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+    <!-- 페이징처리 끝 -->
+<!--    <form th:action="@{/calendar/manage}" method="get" id="searchForm">-->
+<!--        <input type="hidden" id="kw" name="kw" th:value="${kw}">-->
+<!--        <input type="hidden" id="page" name="page" th:value="${paging.number}">-->
+<!--    </form>-->
 </div>
 </html>
