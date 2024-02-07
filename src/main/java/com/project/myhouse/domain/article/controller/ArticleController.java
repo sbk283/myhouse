@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,15 +79,23 @@ public class ArticleController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String articleModify(@Valid ArticleForm articleForm, BindingResult bindingResult,
-                                  Principal principal, @PathVariable("id") Long id) {
+                                Principal principal, @PathVariable("id") Long id,
+                                @RequestParam("thumbnail") MultipartFile newThumbnail, Model model) {
         if (bindingResult.hasErrors()) {
+            // 에러 발생 시 폼 다시 보여주기
             return "article/article_form";
         }
-        Article article = this.articleService.getArticle(id);
+
+        Article article = articleService.getArticle(id);
+
+        // 권한 확인
         if (!article.getUser().getUserId().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
-        this.articleService.modify(article, articleForm.getTitle(), articleForm.getContent());
+
+        // 이미지 수정을 포함한 게시글 수정
+        articleService.modify(article, articleForm.getTitle(), articleForm.getContent(), newThumbnail);
+
         return String.format("redirect:/article/detail/%s", id);
     }
 

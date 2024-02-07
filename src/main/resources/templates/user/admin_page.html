@@ -6,7 +6,7 @@
             <form>
                 <div class="input-group admin-user">
                     <input type="text" name="kw" id="search_kw" class="form-control" th:value="${param.kw}">
-                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
+                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-500" id="btn_search">찾기</button>
                 </div>
             </form>
         </div>
@@ -40,7 +40,7 @@
                 <form th:unless="${siteUser.checkedWithdrawal}" th:action="@{/admin/user/delete/{userId}(userId=${siteUser.userId})}" method="post"
                       onsubmit="return confirm('정말 탈퇴시키겠습니까?');">
                     <input type="hidden" name="userId" th:value="${siteUser.userId}"/>
-                    <button type="submit" class="btn btn-secondary bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()">탈퇴</button>
+                    <button type="submit" class="btn btn-secondary bg-orange-300 hover:bg-orange-500" sec:authorize="isAuthenticated()">탈퇴</button>
                 </form>
             </td>
         </tr>

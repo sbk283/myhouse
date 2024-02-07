@@ -2,13 +2,13 @@
 <div layout:fragment="content" class="container mx-auto" style="flex: 1;">
     <div class="row my-3">
         <div class="col-6">
-            <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-300">돌아가기</a>
+            <a th:href="@{/calendar/list}" class="btn bg-orange-300 hover:bg-orange-500">돌아가기</a>
         </div>
         <div class="col-6">
             <form th:action="@{/calendar/manage}" method="get">
                 <div class="input-group">
                     <input type="text" name="kw" id="search_kw" class="form-control input input-bordered input-accent" th:value="${kw}">
-                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
+                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-500" id="btn_search">찾기</button>
                 </div>
             </form>
         </div>
@@ -35,11 +35,11 @@
             <td class="my-3 text-center" style="height: 100px;">
                 <a th:href="@{|/calendar/modify/${calendar.Id}|}"
                    th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
-                   class="btn bg-orange-300 hover:bg-orange-300" th:text="수정"></a>
+                   class="btn bg-orange-300 hover:bg-orange-500" th:text="수정"></a>
                 <a onclick="return confirm('정말로 삭제 하시겠습니까?');"
                    th:if="${loginUser.isCheckedAdmin() || calendar.user != null and #authentication.getPrincipal().getUsername() == calendar.user.userId}"
                    th:href="@{|/calendar/delete/${calendar.id}|}"
-                   class="btn bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()" th:text="삭제"></a>
+                   class="btn bg-orange-300 hover:bg-orange-500" sec:authorize="isAuthenticated()" th:text="삭제"></a>
             </td>
         </tr>
         </tbody>

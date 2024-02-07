@@ -21,8 +21,8 @@
             <input type="text" id="phone" name="phone" th:value="${userMypageForm.phone}" class="form-control input input-bordered input-accent" disabled>
         </div>
         <div class="col-6">
-            <a th:href="@{/user/mypage}" style="margin-bottom: 10px;" class="btn bg-orange-300 hover:bg-orange-300">정보 수정하기</a>
-            <a th:unless="${#strings.containsIgnoreCase(#authentication.name, 'KAKAO')}" th:href="@{/user/changePw}" class="btn bg-orange-300 hover:bg-orange-300">비밀번호 변경</a>
+            <a th:href="@{/user/mypage}" style="margin-bottom: 10px;" class="btn bg-orange-300 hover:bg-orange-500">정보 수정하기</a>
+            <a th:unless="${#strings.containsIgnoreCase(#authentication.name, 'KAKAO')}" th:href="@{/user/changePw}" class="btn bg-orange-300 hover:bg-orange-500">비밀번호 변경</a>
         </div>
     </form>
 </div>

@@ -6,6 +6,7 @@ import com.project.myhouse.domain.notice.form.NoticeCreateForm;
 import com.project.myhouse.domain.notice.repository.NoticeRepository;
 import com.project.myhouse.domain.user.entity.SiteUser;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,13 +52,17 @@ public class NoticeService {
     }
 
     public void create(String title, String content, SiteUser user, MultipartFile thumbnail) {
-        String thumbnailRelPath = "notice/" + UUID.randomUUID().toString() + ".jpg";
-        File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+        String thumbnailRelPath = null;
 
-        try {
-            thumbnail.transferTo(thumbnailFile);
-        } catch (IOException e) {
-            throw  new RuntimeException(e);
+        if (!thumbnail.isEmpty()) {
+            thumbnailRelPath = "notice/" + UUID.randomUUID().toString() + ".jpg";
+            File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+
+            try {
+                thumbnail.transferTo(thumbnailFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Notice notice = Notice.builder()
@@ -70,17 +75,54 @@ public class NoticeService {
         this.noticeRepository.save(notice);
     }
 
-    public void modify(Notice notice, String title, String content) {
-        Notice modiftNotice = Notice.builder()
+    @Transactional
+    public void modify(Notice notice, String title, String content, MultipartFile newThumbnail) {
+        String thumbnailRelPath = notice.getThumbnailImg();
+
+        // 새로운 이미지가 업로드되었을 경우
+        if (newThumbnail != null && !newThumbnail.isEmpty()) {
+            // 기존 이미지 삭제
+            deleteImageFile(thumbnailRelPath);
+
+            // 새로운 이미지 업로드
+            thumbnailRelPath = uploadNewThumbnail(newThumbnail);
+        }
+
+        // 게시글 업데이트
+        notice = Notice.builder()
                 .id(notice.getId())
-                .createDate(notice.getCreateDate())
-                .modifiedDate(LocalDateTime.now())
                 .title(title)
                 .content(content)
-                .thumbnailImg(notice.getThumbnailImg())
+                .thumbnailImg(thumbnailRelPath)
+                .modifiedDate(LocalDateTime.now())
+                .createDate(notice.getCreateDate())
                 .user(notice.getUser())
                 .build();
-        this.noticeRepository.save(modiftNotice);
+
+        noticeRepository.save(notice);
+    }
+
+    public void deleteImageFile(String imagePath) {
+        if (imagePath != null) {
+            File imageFile = new File(fileDirPath + "/" + imagePath);
+
+            if (imageFile.exists() && !imageFile.delete()) {
+                throw new RuntimeException("Failed to delete image file: " + imagePath);
+            }
+        }
+    }
+
+    private String uploadNewThumbnail(MultipartFile newThumbnail) {
+        String thumbnailRelPath = "notice/" + UUID.randomUUID().toString() + ".jpg";
+        File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+
+        try {
+            newThumbnail.transferTo(thumbnailFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return thumbnailRelPath;
     }
 
     public void delete(Notice notice) {

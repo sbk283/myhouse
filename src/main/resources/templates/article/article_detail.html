@@ -12,24 +12,24 @@
         <div class="card-body">
             <div class="card-text" th:utext="${@commonUtil.markdown(article.content)}"></div>
             <div>
-                <img th:src="@{|/file/${article.thumbnailImg}|}" class="figure-img img-fluid rounded" alt="image">
+                <img th:if="${article.thumbnailImg != null}" th:src="@{|/file/${article.thumbnailImg}|}" class="figure-img img-fluid rounded" alt="image">
             </div>
             <div class="my-3">
                 <div class="my-3">
                     <div class="badge badge-outline">
-                        <div th:text="${#temporals.format(article.createDate, '작성일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                        <div th:text="${#temporals.format(article.createDate, '작성일 : yyyy-MM-dd HH:mm:ss')}"></div>
                     </div>
                     <br>
                     <div th:if="${article.modifiedDate != null}" class="badge badge-outline">
-                        <div th:text="${#temporals.format(article.modifiedDate, '수정일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                        <div th:text="${#temporals.format(article.modifiedDate, '수정일 : yyyy-MM-dd HH:mm:ss')}"></div>
                     </div>
                 </div>
-                <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-secondary bg-orange-300 hover:bg-orange-300"
+                <a th:href="@{|/article/modify/${article.id}|}" class="btn btn-secondary bg-orange-300 hover:bg-orange-500"
                    sec:authorize="isAuthenticated()"
                    th:if="${article.user != null and #authentication.getPrincipal().getUsername() == article.user.userId}"
                    th:text="수정"></a>
                 <a onclick="return confirm('정말 삭제하시겠습니까?')" th:href="@{|/article/delete/${article.id}|}"
-                   class="btn btn-secondary bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()"
+                   class="btn btn-secondary bg-orange-300 hover:bg-orange-500" sec:authorize="isAuthenticated()"
                    th:if="${article.user != null and #authentication.getPrincipal().getUsername() == article.user.userId}"
                    th:text="삭제"></a>
                 <!-- 관리자 전용 삭제 버튼 -->
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    <a th:href="@{/article/list}" class="btn btn-secondary bg-orange-300 hover:bg-orange-300">목록보기</a>
+    <a th:href="@{/article/list}" class="btn btn-secondary bg-orange-300 hover:bg-orange-500">목록보기</a>
     <!-- 답변의 갯수 표시 -->
     <h3 class="border-bottom my-3 py-2" style="font-size: 25px;"
         th:text="|${#lists.size(article.replyList)}개의 답변이 있습니다.|"></h3>
@@ -56,20 +56,20 @@
             <div class="card-text" th:utext="${@commonUtil.markdown(articleReply.content)}"></div>
             <div class="my-3">
                 <div class="badge badge-outline">
-                    <div th:text="${#temporals.format(articleReply.createDate, '작성일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                    <div th:text="${#temporals.format(articleReply.createDate, '작성일 : yyyy/MM/dd HH:mm:ss')}"></div>
                 </div>
                 <br>
                 <div th:if="${articleReply.modifiedDate != null}" class="badge badge-outline">
-                    <div th:text="${#temporals.format(articleReply.modifiedDate, '수정일 : yyyy년 MM월 dd일 HH시 mm분 ss초')}"></div>
+                    <div th:text="${#temporals.format(articleReply.modifiedDate, '수정일 : yyyy/MM/dd HH:mm:ss')}"></div>
                 </div>
             </div>
             <div class="my-3">
-                <a th:href="@{|/articleReply/modify/${articleReply.id}|}" class="btn btn-secondary bg-orange-300 hover:bg-orange-300"
+                <a th:href="@{|/articleReply/modify/${articleReply.id}|}" class="btn btn-secondary bg-orange-300 hover:bg-orange-500"
                    sec:userize="isAuthenticated()"
                    th:if="${articleReply.user != null and #authentication.getPrincipal().getUsername() == articleReply.user.userId}"
                    th:text="수정"></a>
                 <a onclick="return confirm('정말 삭제 하시겠습니까?');" th:href="@{|/articleReply/delete/${articleReply.id}|}"
-                   class="btn btn-secondary bg-orange-300 hover:bg-orange-300" sec:authorize="isAuthenticated()"
+                   class="btn btn-secondary bg-orange-300 hover:bg-orange-500" sec:authorize="isAuthenticated()"
                    th:if="${articleReply.user != null and #authentication.getPrincipal().getUsername() == articleReply.user.userId}"
                    th:text="삭제"></a>
                 <!-- 관리자 전용 삭제 버튼 -->
@@ -93,7 +93,7 @@
                 class="form-control"
                 rows="10"
         ></textarea>
-        <input type="submit" value="답변등록" class="btn btn-secondary bg-orange-300 hover:bg-orange-300" style="margin-top: 10px;">
+        <input type="submit" value="답변등록" class="btn btn-secondary bg-orange-300 hover:bg-orange-500" style="margin-top: 10px;">
     </form>
 </div>
 </body>

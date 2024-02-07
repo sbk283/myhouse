@@ -3,13 +3,13 @@
     <div class="row my-3">
         <div class="col-6">
             <a th:if="${loginUser != null and loginUser.isCheckedAdmin()}"
-               th:href="@{/notice/create}" class="btn btn-secondary bg-orange-300 hover:bg-orange-300">공지 등록하기</a>
+               th:href="@{/notice/create}" class="btn btn-secondary bg-orange-300 hover:bg-orange-500">공지 등록하기</a>
         </div>
         <div class="col-6">
             <form>
                 <div class="input-group">
                     <input type="text" name="kw" id="search_kw" class="form-control input input-bordered input-accent" th:value="${param.kw}">
-                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-300" id="btn_search">찾기</button>
+                    <button class="btn btn-secondary bg-orange-300 hover:bg-orange-500" id="btn_search">찾기</button>
                 </div>
             </form>
         </div>

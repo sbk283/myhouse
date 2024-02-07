@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,16 +103,37 @@ public class NoticeController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String noticeModify(@Valid NoticeCreateForm noticeCreateForm, BindingResult bindingResult,
-                               Principal principal, @PathVariable("id") Long id, Model model) {
+                               Principal principal, @PathVariable("id") Long id,
+                               @RequestParam("thumbnail") MultipartFile newThumbnail, Model model) {
         if (bindingResult.hasErrors()) {
+            // 에러 발생 시 폼 다시 보여주기
             return "notice/notice_form";
         }
-        Notice notice = this.noticeService.getNotice(id);
-        if(!notice.getUser().getUserId().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+
+        Notice notice = noticeService.getNotice(id);
+
+        // 권한 확인
+        if (!notice.getUser().getUserId().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
         }
-        this.noticeService.modify(notice, noticeCreateForm.getTitle(), noticeCreateForm.getContent());
+
+        // 이미지 수정을 포함한 게시글 수정
+        noticeService.modify(notice, noticeCreateForm.getTitle(), noticeCreateForm.getContent(), newThumbnail);
+
         return String.format("redirect:/notice/detail/%s", id);
+    }
+
+    // 이미지 삭제
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/deleteImage/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable Long id) {
+        Notice notice = noticeService.getNotice(id);
+        String thumbnailRelPath = notice.getThumbnailImg();
+
+        // 이미지 삭제
+        noticeService.deleteImageFile(thumbnailRelPath);
+
+        return ResponseEntity.ok("Image deleted successfully");
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -127,4 +149,6 @@ public class NoticeController {
         this.noticeService.delete(notice);
         return "redirect:/";
     }
+
+
 }

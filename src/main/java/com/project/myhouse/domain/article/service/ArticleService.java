@@ -4,6 +4,7 @@ import com.project.myhouse.domain.article.entity.Article;
 import com.project.myhouse.domain.article.repository.ArticleRepository;
 import com.project.myhouse.domain.user.entity.SiteUser;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -48,13 +49,17 @@ public class ArticleService {
     }
 
     public void create(String title, String content, SiteUser user, MultipartFile thumbnail) {
-        String thumbnailRelPath = "article/" + UUID.randomUUID().toString() + ".jpg";
-        File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+        String thumbnailRelPath = null;
 
-        try {
-            thumbnail.transferTo(thumbnailFile);
-        } catch (IOException e) {
-            throw  new RuntimeException(e);
+        if (!thumbnail.isEmpty()) {
+            thumbnailRelPath = "article/" + UUID.randomUUID().toString() + ".jpg";
+            File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+
+            try {
+                thumbnail.transferTo(thumbnailFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         Article article = Article.builder()
@@ -67,17 +72,54 @@ public class ArticleService {
         this.articleRepository.save(article);
     }
 
-    public void modify(Article article, String title, String content) {
-        Article modifiyArticle = article.toBuilder()
+    @Transactional
+    public void modify(Article article, String title, String content, MultipartFile newThumbnail) {
+        String thumbnailRelPath = article.getThumbnailImg();
+
+        // 새로운 이미지가 업로드되었을 경우
+        if (newThumbnail != null && !newThumbnail.isEmpty()) {
+            // 기존 이미지 삭제
+            deleteImageFile(thumbnailRelPath);
+
+            // 새로운 이미지 업로드
+            thumbnailRelPath = uploadNewThumbnail(newThumbnail);
+        }
+
+        // 게시글 업데이트
+        article = Article.builder()
                 .id(article.getId())
-                .createDate(article.getCreateDate())
-                .modifiedDate(LocalDateTime.now())
                 .title(title)
                 .content(content)
-                .thumbnailImg(article.getThumbnailImg())
+                .thumbnailImg(thumbnailRelPath)
+                .modifiedDate(LocalDateTime.now())
+                .createDate(article.getCreateDate())
                 .user(article.getUser())
                 .build();
-        this.articleRepository.save(modifiyArticle);
+
+        articleRepository.save(article);
+    }
+
+    public void deleteImageFile(String imagePath) {
+        if (imagePath != null) {
+            File imageFile = new File(fileDirPath + "/" + imagePath);
+
+            if (imageFile.exists() && !imageFile.delete()) {
+                throw new RuntimeException("Failed to delete image file: " + imagePath);
+            }
+        }
+    }
+
+    private String uploadNewThumbnail(MultipartFile newThumbnail) {
+        String thumbnailRelPath = "article/" + UUID.randomUUID().toString() + ".jpg";
+        File thumbnailFile = new File(fileDirPath + "/" + thumbnailRelPath);
+
+        try {
+            newThumbnail.transferTo(thumbnailFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return thumbnailRelPath;
     }
 
     public void delete(Article article) {
