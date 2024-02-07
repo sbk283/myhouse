@@ -9,11 +9,15 @@ MyHouse는 한 숙소의 개인용 사이트를 계획으로 만들어지게 되
 - 데이터베이스: MariaDB
 - 보안: HTTPS, OAuth 2.0 (카카오 로그인)
 <br>
+
 ## ☁️ 흐름도
-![flowchart]()
+
+![로그인 (3)](https://github.com/sbk283/myhouse/assets/133177283/fbeea5ca-f9ff-4f79-86b6-b5501cf51631)
 <br>
+
 ## ☁️ ERD
-![ERD]()
+
+![Untitled](https://github.com/sbk283/myhouse/assets/133177283/e5e7bc9d-160b-46f0-91b1-4aa4a4b4ab2e)
 <br>
 
 ## 👀 시연영상
