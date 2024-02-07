@@ -10,10 +10,10 @@ MyHouse는 한 숙소의 개인용 사이트를 계획으로 만들어지게 되
 - 보안: HTTPS, OAuth 2.0 (카카오 로그인)
 <br>
 ## ☁️ 흐름도
-![flowchart]([https://i.ibb.co/zJbBqwy/3.png](https://i.ibb.co/nCfYxSH/3.png))
+![flowchart]()
 <br>
 ## ☁️ ERD
-![ERD](https://private-user-images.githubusercontent.com/133177283/302534458-bfaf2ca5-d933-4818-8be7-c9d0a84a47b3.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDcyMDQzMDIsIm5iZiI6MTcwNzIwNDAwMiwicGF0aCI6Ii8xMzMxNzcyODMvMzAyNTM0NDU4LWJmYWYyY2E1LWQ5MzMtNDgxOC04YmU3LWM5ZDBhODRhNDdiMy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMjA2JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDIwNlQwNzIwMDJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT00Mjg0MTU1ZjE4ODM5NWUxYmZkMDA5ZWUyZDU4NDRmZjFkOGFlYTMyMDkxNDcwZThiZWE3YWE0YTI3Y2IzNDZlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.8PK6r2JeA_59FjTZDOk38h9A150gExD7Pfn8kg4CBRE)
+![ERD]()
 <br>
 
 ## 👀 시연영상
