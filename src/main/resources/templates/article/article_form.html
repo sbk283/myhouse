@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container card my-3 shrink-0 w-full max-w-sm shadow-2xl bg-base-100" style="flex: 1;">
-    <h2 style="font-size: 30px;" class="my-3 border-bottom pb-2">게시글 수정</h2>
+    <h2 style="font-size: 30px;" class="my-3 border-bottom pb-2">게시글 등록</h2>
     <form th:object="${articleForm}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
@@ -30,7 +30,7 @@
                 </textarea>
         </div>
         <input type="file" name="thumbnail" accept="image/png, image/gif, image/jpeg" class="file-input input-bordered input-accent w-full max-w-xs"/>
-        <input type="submit" value="수정하기" class="btn bg-orange-300 hover:bg-orange-500 my-2"/>
+        <input type="submit" value="등록하기" class="btn bg-orange-300 hover:bg-orange-500 my-2"/>
     </form>
 </div>
 </html>

@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container" style="flex: 1;">
+<div layout:fragment="content" class="container card my-3 shrink-0 w-full max-w-sm shadow-2xl bg-base-100" style="flex: 1;">
     <h5 style="font-size: 30px;" class="my-3 border-bottom pb-2">답변 수정</h5>
     <form th:object="${articleReplyForm}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -12,7 +12,7 @@
                     placeholder="내용을 2,000자 이하로 입력하세요"
                     th:text="${articleReplyForm.content}"
                     name="content" id="content"
-                    class="form-control"
+                    class="form-control textarea textarea-bordered textarea-accent"
                     rows="10">
             </textarea>
         </div>
