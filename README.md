@@ -23,6 +23,11 @@ MyHouse는 한 숙소의 개인용 사이트를 계획으로 만들어지게 되
 ## 👀 시연영상
 #### 누르면 새창으로 이동합니다.
 [![movie](https://img.youtube.com/vi/ajiOw6pQRdo/0.jpg)](https://youtu.be/ajiOw6pQRdo)
+
+## 👀 발표영상
+#### 누르면 새창으로 이동합니다.
+[![movie](https://img.youtube.com/vi/ajiOw6pQRdo/0.jpg)](https://youtu.be/plS0jOGuLxw))
+
 ## 🔥 트러블 슈팅
 ### 🚧 이슈 제목
 ### stackoverflowerror 에러 발생
