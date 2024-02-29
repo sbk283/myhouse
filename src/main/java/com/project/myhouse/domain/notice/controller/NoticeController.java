@@ -149,6 +149,4 @@ public class NoticeController {
         this.noticeService.delete(notice);
         return "redirect:/";
     }
-
-
 }

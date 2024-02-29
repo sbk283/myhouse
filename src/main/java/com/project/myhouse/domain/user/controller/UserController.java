@@ -73,20 +73,6 @@ public class UserController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/mypage")
-    public String mypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
-        String username = principal.getName();
-        SiteUser siteUser = this.userService.getUser(username);
-        if (!siteUser.getUserId().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
-        userCreateForm.setUserId(siteUser.getUserId());
-        userMypageForm.setNickname(siteUser.getNickname());
-        userMypageForm.setPhone(siteUser.getPhone());
-        return "user/mypage_form";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/showmypage")
     public String showmypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
         String username = principal.getName();
@@ -99,6 +85,20 @@ public class UserController {
         userMypageForm.setPhone(siteUser.getPhone());
 
         return "user/mypage_detail";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/mypage")
+    public String mypage(UserMypageForm userMypageForm, UserCreateForm userCreateForm, Principal principal) {
+        String username = principal.getName();
+        SiteUser siteUser = this.userService.getUser(username);
+        if (!siteUser.getUserId().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        userCreateForm.setUserId(siteUser.getUserId());
+        userMypageForm.setNickname(siteUser.getNickname());
+        userMypageForm.setPhone(siteUser.getPhone());
+        return "user/mypage_form";
     }
 
     @PreAuthorize("isAuthenticated()")

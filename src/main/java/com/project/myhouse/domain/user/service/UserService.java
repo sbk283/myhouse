@@ -42,20 +42,6 @@ public class UserService {
         return user;
     }
 
-    @Transactional
-    public SiteUser adminCreate(String username, String nickname, String password, String phone, boolean checkedAdmin) {
-        SiteUser user = SiteUser.builder()
-                .userId(username)
-                .nickname(nickname)
-                .password(passwordEncoder.encode(password))
-                .phone(phone)
-                .createDate(LocalDateTime.now())
-                .checkedAdmin(true)
-                .build();
-        this.userRepository.save(user);
-        return user;
-    }
-
     public SiteUser getUser(String username) {
         return this.userRepository.findByUserId(username)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -78,6 +64,7 @@ public class UserService {
     public List<SiteUser> getAllUsers() {
         return userRepository.findAll();
     }
+
     @Transactional
     public void modify(SiteUser user, String nickname, String phone) {
         this.userRepository.findByUserId(user.getUserId())
