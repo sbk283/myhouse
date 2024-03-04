@@ -3,14 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/MyHouse?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    url: jdbc:h2:~/local
     username: root
     password:
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: update
-      dialect: org.hibernate.dialect.MariaDBDialect
+      dialect: org.hibernate.dialect.H2Dialect
     show-sql: true
     output:
       ansi:
